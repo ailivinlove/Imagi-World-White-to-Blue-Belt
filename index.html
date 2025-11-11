@@ -382,6 +382,7 @@
             margin-top: 20px;
         }
 
+
         .test-result {
             padding: 8px;
             margin: 5px 0;
@@ -717,7 +718,7 @@
             </div>
 
             <div class="control-group">
-                <label>Atoms per Premise (k): <span class="range-value" id="k-value">1</span></label>
+                <label><span id="k-label">Atoms per Premise</span> (k): <span class="range-value" id="k-value">1</span></label>
                 <input type="range" id="k-slider" min="1" max="4" value="1">
             </div>
 
@@ -739,6 +740,16 @@
             <div class="control-group checkbox-group">
                 <input type="checkbox" id="transitivity-toggle">
                 <label for="transitivity-toggle" style="margin-bottom: 0;">Enable Advanced Transitivity</label>
+            </div>
+
+            <div class="control-group checkbox-group">
+                <input type="checkbox" id="g-leap-toggle">
+                <label for="g-leap-toggle" style="margin-bottom: 0;">Force Meta-Relational Trials (Level 6: g-Leap)</label>
+            </div>
+
+            <div class="control-group checkbox-group">
+                <input type="checkbox" id="compound-leap-toggle">
+                <label for="compound-leap-toggle" style="margin-bottom: 0;">Force Compound Operator Trials (Level 7: Maximum g-Load)</label>
             </div>
 
             <div class="control-group checkbox-group">
@@ -773,6 +784,7 @@
                     <button id="stop-btn" class="danger" disabled>Stop</button>
                     <button id="repeat-btn" class="secondary" disabled>Repeat Audio</button>
                     <button id="preview-btn" class="secondary">Voice Preview</button>
+                    <button id="reset-voice-btn" class="secondary">Reset Voice</button>
                     <button id="btnInstructions" aria-haspopup="dialog" aria-controls="dlgInstructions">Instructions</button>
                 </div>
                 <div class="button-group">
@@ -823,6 +835,7 @@
             </div>
         </div>
 
+
         <div id="debug" hidden>
             <h3>Debug Panel - Last Premises</h3>
             <div id="debug-content"></div>
@@ -848,6 +861,8 @@
             <button data-tab="examples">Guided Examples</button>
             <button data-tab="practice">Sandbox Practice</button>
             <button data-tab="mastery">Mastery Path</button>
+            <button data-tab="level6">Level 6: g-Leap</button>
+            <button data-tab="level7">Level 7: Ultimate</button>
             <button data-tab="pitfalls">Pitfalls &amp; FAQ</button>
             <button data-tab="glossary">Glossary</button>
         </nav>
@@ -942,10 +957,10 @@
                 html: `
                     <h3>The Imagi-Compass</h3>
                     <ul>
-                        <li><strong>North (↑ Up-shift):</strong> move to meta, greater scale, more general, more intense. “Candle → Fireworks”; “Task → Project → Program.”</li>
-                        <li><strong>South (↓ Down-shift):</strong> move to instance, component, concrete, less intense. “Theory → Example”; “System → Tool → Part.”</li>
-                        <li><strong>East (→ Analogue):</strong> parallel function or sibling concept. “Candle → Lantern”; “Fact → Case study”; “Parent → Guardian.”</li>
-                        <li><strong>West (← Opposite):</strong> antonym/counter-role. “Fact ↔ Fiction”; “Order ↔ Chaos”; “Light ↔ Darkness.”</li>
+                        <li><strong>North (↑ Up-shift):</strong> move to meta, greater scale, more general, more intense. "Candle → Fireworks"; "Task → Project → Program."</li>
+                        <li><strong>South (↓ Down-shift):</strong> move to instance, component, concrete, less intense. "Theory → Example"; "System → Tool → Part."</li>
+                        <li><strong>East (→ Analogue):</strong> parallel function or sibling concept. "Candle → Lantern"; "Fact → Case study"; "Parent → Guardian."</li>
+                        <li><strong>West (← Opposite):</strong> antonym/counter-role. "Fact ↔ Fiction"; "Order ↔ Chaos"; "Light ↔ Darkness."</li>
                     </ul>
                     <p><strong>Rule:</strong> your analogical mapping must be <strong>self-consistent</strong> within a session. Reframes are allowed but must be acknowledged.</p>
                 `,
@@ -957,13 +972,13 @@
                 html: `
                     <h3>Step-by-Step: Anchor &amp; Transform</h3>
                     <ol>
-                        <li><strong>Anchor</strong> one letter from the current premise to a real concept from your stream of consciousness (write it or think it). Example: <code>X := “Fact”</code>.</li>
+                        <li><strong>Anchor</strong> one letter from the current premise to a real concept from your stream of consciousness (write it or think it). Example: <code>X := "Fact"</code>.</li>
                         <li><strong>Transform</strong> per atom:
                             <ul>
-                                <li><code>Y is north of X</code> → <code>Y := Up-shift(X)</code> → “Theory”.</li>
-                                <li><code>Z is west of X</code> → <code>Z := Opposite(X)</code> → “Fiction”.</li>
-                                <li><code>R is south of Y</code> → <code>R := Down-shift(Y)</code> → “Example”.</li>
-                                <li><code>H is east of R</code> → <code>H := Analogue(R)</code> → “Case study”.</li>
+                                <li><code>Y is north of X</code> → <code>Y := Up-shift(X)</code> → "Theory".</li>
+                                <li><code>Z is west of X</code> → <code>Z := Opposite(X)</code> → "Fiction".</li>
+                                <li><code>R is south of Y</code> → <code>R := Down-shift(Y)</code> → "Example".</li>
+                                <li><code>H is east of R</code> → <code>H := Analogue(R)</code> → "Case study".</li>
                             </ul>
                         </li>
                         <li><strong>Check coherence</strong>: does each transformed concept match its relational cue? If yes, commit this mapping to your session notes.</li>
@@ -988,12 +1003,12 @@
                 html: `
                     <h3>Sandbox Practice (Not Scored)</h3>
                     <ul>
-                        <li>This is a safe studio. Load the <strong>latest premise</strong> (button “Load current premise”), or spawn a <strong>fresh training premise</strong> (button “Spawn practice premise”).</li>
+                        <li>This is a safe studio. Load the <strong>latest premise</strong> (button "Load current premise"), or spawn a <strong>fresh training premise</strong> (button "Spawn practice premise").</li>
                         <li>Enter concepts for the letters; click <strong>Apply Relation Operations</strong> to auto-suggest analogues/opposites/up/down (you may override).</li>
                         <li>Use <strong>Commit to Journal</strong> to save your mapping snapshots (they do not affect your game score).</li>
                         <li>Toggle <strong>Read this section aloud</strong> for gentle narration using the same single voice the game uses.</li>
                     </ul>
-                    <p><strong>Tip:</strong> strive for <strong>one-sentence explanations</strong> that justify your choices: “I chose <em>Theory</em> above <em>Fact</em> because it generalizes observations into predictive structure.”</p>
+                    <p><strong>Tip:</strong> strive for <strong>one-sentence explanations</strong> that justify your choices: "I chose <em>Theory</em> above <em>Fact</em> because it generalizes observations into predictive structure."</p>
                 `,
                 speech: 'Sandbox Practice, not scored. This is a safe studio. Load the latest premise with the button Load current premise, or spawn a fresh training premise with the button Spawn practice premise. Enter concepts for the letters; click Apply Relation Operations to auto-suggest analogues, opposites, up, or down shifts. You may override anything. Use Commit to Journal to save your mapping snapshots. They do not affect your game score. Toggle Read this section aloud for gentle narration using the same single voice the game uses. Tip: strive for one-sentence explanations that justify your choices, such as, I chose Theory above Fact because it generalizes observations into predictive structure.'
             },
@@ -1004,14 +1019,16 @@
                     <h3>Mastery: From Symbols to Schemas</h3>
                     <ul>
                         <li><strong>Level 1 — Single-atom fluency:</strong> 95% accuracy in naming valid up/down/analogue/opposite for any anchor within 3 seconds.</li>
-                        <li><strong>Level 2 — Two-atom coordination:</strong> keep consistency when a letter appears in two relations; reconcile tensions by compound mappings (“chaotic example”).</li>
+                        <li><strong>Level 2 — Two-atom coordination:</strong> keep consistency when a letter appears in two relations; reconcile tensions by compound mappings ("chaotic example").</li>
                         <li><strong>Level 3 — Chain reasoning:</strong> three or more atoms spanning two axes; maintain semantic integrity across the chain.</li>
-                        <li><strong>Level 4 — Near-miss foils:</strong> detect when premises <strong>look</strong> similar but fail one criterion (anchoring parity, mapping, axis alignment, derivability). Explain <strong>why</strong> they’re not matches in plain language.</li>
-                        <li><strong>Level 5 — Transfer:</strong> take a mapping that worked in one theme (“Learning &amp; Illumination”) and remake it in a different theme (“Teams &amp; Leadership”), preserving relational roles: <code>Fact→Novice Task</code>, <code>Theory→Best Practice</code>, <code>Example→Case Review</code>, <code>Case study→Playbook</code>, <code>Fiction→Myth/Misconception</code>.</li>
+                        <li><strong>Level 4 — Near-miss foils:</strong> detect when premises <strong>look</strong> similar but fail one criterion (anchoring parity, mapping, axis alignment, derivability). Explain <strong>why</strong> they're not matches in plain language.</li>
+                        <li><strong>Level 5 — Transfer:</strong> take a mapping that worked in one theme ("Learning &amp; Illumination") and remake it in a different theme ("Teams &amp; Leadership"), preserving relational roles: <code>Fact→Novice Task</code>, <code>Theory→Best Practice</code>, <code>Example→Case Review</code>, <code>Case study→Playbook</code>, <code>Fiction→Myth/Misconception</code>.</li>
+                        <li><strong>Level 6 — Meta-Relational Analogy (The 'g' Leap):</strong> This is the most advanced task, designed for peak fluid intelligence. You will see a new premise type: <code>"North to South as East to West."</code> This is a pure analogy of relations. The game engine is testing if the <em>relationship</em> between the first pair is the same as the <em>relationship</em> between the second pair. <br><strong>Your Task:</strong> Determine if the premise is True or False. An N-back match occurs if the N-back premise has the <em>same truth value</em> (i.e., True matches True, and False matches False). <br><strong>Example:</strong> <code>North to South as East to West</code> <br><strong>Deduction 1 (5th-Order):</strong> The relation <code>(North to South)</code> is <code>Up-shift</code> → <code>Down-shift</code>. These are opposites. The hidden operator is <strong>West</strong>. <br><strong>Deduction 2 (5th-Order):</strong> The relation <code>(East to West)</code> is <code>Analogue</code> → <code>Opposite</code>. These are also opposites. The hidden operator is <strong>West</strong>. <br><strong>Result:</strong> <code>West</code> equals <code>West</code>. The premise is <strong>True</strong>. <br><strong>Example 2:</strong> <code>North to East as South to West</code> <br><strong>Deduction 1:</strong> <code>(North to East)</code> is <code>Up-shift</code> → <code>Analogue</code>. These are orthogonal. The relation is <strong>None</strong>. <br><strong>Deduction 2:</strong> <code>(South to West)</code> is <code>Down-shift</code> → <code>Opposite</code>. These are also orthogonal. The relation is <strong>None</strong>. <br><strong>Result:</strong> <code>None</code> equals <code>None</code>. The premise is <strong>True</strong>. <br><strong>Example 3:</strong> <code>North to South as North to East</code> <br><strong>Result:</strong> <code>West</code> does not equal <code>None</code>. The premise is <strong>False</strong>.</li>
+                        <li><strong>Advanced Strategy — Semantic Anchoring (Mental Technique):</strong> This is <strong>not a separate game mode</strong>—it's a powerful mental strategy you can apply to any level. Instead of manipulating abstract letters, you <strong>mentally anchor them to concrete concepts</strong> from your lived experience. <br><strong>How It Works (Purely Mental):</strong> (1) System shows: <code>N is north of J</code>. (2) You mentally anchor: J := "Fact". (3) You mentally transform: North(J→N) = up-shift "Fact" → "Theory". (4) You mentally map: N := "Theory". (5) In your head, the premise becomes "Theory is the higher abstraction of Fact". <br><strong>The Key:</strong> The system <strong>never sees</strong> your semantic anchors. They exist purely in your working memory. <br><strong>Applying to Level 6:</strong> You can also anchor META premises mentally. System shows: <code>"North to South as East to West"</code>. You mentally imagine: "North to South" (opposite) = "Teacher to Student" relationship. "East to West" (opposite) = "Day to Night" relationship. Both are opposite relationships → TRUE premise. <br><strong>Ultimate Challenge:</strong> Combine mental semantic anchoring with Level 6 META premises at high n-back (n=4 or 5). This requires: <strong>(1) Generating</strong> mental semantic anchors, <strong>(2) Evaluating</strong> truth values via operator logic, <strong>(3) Recalling</strong> your mental anchors from 4-5 trials ago, <strong>(4) Maintaining</strong> all of this in working memory simultaneously. This is the highest g-load task because YOUR imagination creates the semantic layer <strong>entirely in your head</strong>.</li>
                     </ul>
                     <p><strong>Mastery litmus:</strong> you can improvise <strong>new, coherent mappings</strong> at speed, across themes, while the logic engine remains satisfied—no contradictions, no shortcuts.</p>
                 `,
-                speech: 'Mastery: From Symbols to Schemas. Level one, single-atom fluency: ninety-five percent accuracy in naming valid up, down, analogue, or opposite moves for any anchor within three seconds. Level two, two-atom coordination: keep consistency when a letter appears in two relations; reconcile tensions by compound mappings such as Chaotic example. Level three, chain reasoning: three or more atoms spanning two axes; maintain semantic integrity across the chain. Level four, near-miss foils: detect when premises look similar but fail one criterion—anchoring parity, mapping, axis alignment, derivability. Explain why they are not matches in plain language. Level five, transfer: take a mapping that worked in one theme, Learning and Illumination, and remake it in a different theme, Teams and Leadership, preserving relational roles: Fact to Novice Task, Theory to Best Practice, Example to Case Review, Case study to Playbook, Fiction to Myth or Misconception. Mastery litmus: you can improvise new, coherent mappings at speed, across themes, while the logic engine remains satisfied—no contradictions, no shortcuts.'
+                speech: 'Mastery: From Symbols to Schemas. Level one, single-atom fluency: ninety-five percent accuracy in naming valid up, down, analogue, or opposite moves for any anchor within three seconds. Level two, two-atom coordination: keep consistency when a letter appears in two relations; reconcile tensions by compound mappings such as Chaotic example. Level three, chain reasoning: three or more atoms spanning two axes; maintain semantic integrity across the chain. Level four, near-miss foils: detect when premises look similar but fail one criterion—anchoring parity, mapping, axis alignment, derivability. Explain why they are not matches in plain language. Level five, transfer: take a mapping that worked in one theme, Learning and Illumination, and remake it in a different theme, Teams and Leadership, preserving relational roles: Fact to Novice Task, Theory to Best Practice, Example to Case Review, Case study to Playbook, Fiction to Myth or Misconception. Level six, Meta-Relational Analogy, the g-Leap: This is peak fluid intelligence. You will see pure operator analogies like North to South as East to West. Your task: determine if the premise is true or false by deducing the hidden operator. Example: North to South is Up-shift to Down-shift, which are opposites, so the hidden operator is West. East to West is Analogue to Opposite, also opposites, so the hidden operator is West. West equals West, the premise is True. An n-back match occurs when both premises have the same truth value. Level seven, Generative Semantic Anchoring, the Ultimate g-Leap: This is the highest cognitive challenge. When you see a Level six premise, you will be prompted to generate your own semantic pairs from imagination. The system shows North to South as East to West. You input: What does North to South mean to you? You type Teacher to Student. You input: What does East to West mean to you? You type Day to Night. The system validates your pairs, stores them with the premise, and you must recall YOUR anchors across n-back trials. This maximizes g-load through generative creation, working memory for self-generated concepts, dual representation of operators plus personal semantics, validation of your semantics, and n-back matching while recalling your anchors. This is the highest g-load task because your imagination creates the semantic layer. Mastery litmus: you can improvise new, coherent mappings at speed, across themes, while the logic engine remains satisfied—no contradictions, no shortcuts.'
             },
             {
                 id: 'pitfalls',
@@ -1020,16 +1037,30 @@
                     <h3>Pitfalls &amp; FAQ</h3>
                     <dl>
                         <dt><strong>Q:</strong> Can I use the same word for East (analogue)?</dt>
-                        <dd><strong>A:</strong> Prefer <strong>siblings</strong>, not duplicates. “Candle → Lantern,” not “Candle → Candle.”</dd>
+                        <dd><strong>A:</strong> Prefer <strong>siblings</strong>, not duplicates. "Candle → Lantern," not "Candle → Candle."</dd>
                         <dt><strong>Q:</strong> My West choice feels too cartoonish.</dt>
-                        <dd><strong>A:</strong> “Opposite” includes <strong>counter-role</strong> or <strong>antagonist</strong>, not just antonym. “Order ↔ Chaos,” “Plan ↔ Improvisation.”</dd>
+                        <dd><strong>A:</strong> "Opposite" includes <strong>counter-role</strong> or <strong>antagonist</strong>, not just antonym. "Order ↔ Chaos," "Plan ↔ Improvisation."</dd>
                         <dt><strong>Q:</strong> What if my mapping breaks later?</dt>
                         <dd><strong>A:</strong> Use a <strong>Reframe</strong> action. Log it. Consistency matters more than stubbornness.</dd>
                         <dt><strong>Q:</strong> Do analogies change scoring?</dt>
                         <dd><strong>A:</strong> No. Scoring is formal. Analogies train your <strong>semantic agility</strong>.</dd>
+                        <dt><strong>Q (Level 6):</strong> How do I know if a META premise is True or False?</dt>
+                        <dd><strong>A:</strong> Deduce the hidden operator for each pair. Example: "North to South" = Up-shift→Down-shift = <strong>Opposite (West)</strong>. "East to West" = Analogue→Opposite = <strong>Opposite (West)</strong>. West = West → <strong>True</strong>. If operators differ, it's False. If both are orthogonal (no relationship), it's True.</dd>
+                        <dt><strong>Q (Level 6):</strong> What's an "orthogonal" relationship?</dt>
+                        <dd><strong>A:</strong> No clear relationship exists. Example: North→East (Up-shift→Analogue) has no operator because they're perpendicular concepts. If <strong>both</strong> pairs are orthogonal, the premise is True (None = None).</dd>
+                        <dt><strong>Q (Level 6):</strong> How does n-back matching work for META premises?</dt>
+                        <dd><strong>A:</strong> Match on <strong>truth value</strong>, not operators. If n-back premise was True and current premise is True → MATCH. If n-back was False and current is False → MATCH. Different truth values → NO MATCH.</dd>
+                        <dt><strong>Q (Semantic Anchoring):</strong> What if I can't think of a good semantic anchor?</dt>
+                        <dd><strong>A:</strong> Use the directional concept as a guide. For North (Up-shift), think: mature→immature, complex→simple, whole→part. For South (Down-shift), reverse it. For East (Analogue), think: siblings, parallel roles, same category. For West (Opposite), think: antonyms, counter-roles, complementary pairs.</dd>
+                        <dt><strong>Q (Semantic Anchoring):</strong> Does it matter what semantic anchors I choose?</dt>
+                        <dd><strong>A:</strong> Not to the system—it never sees them! Choose anchors that are <strong>vivid and memorable to YOU</strong>. The cognitive load comes from generating AND remembering YOUR specific mental anchors across n-back trials.</dd>
+                        <dt><strong>Q (Semantic Anchoring):</strong> Should I use the same anchors throughout a session?</dt>
+                        <dd><strong>A:</strong> It helps! If J := "Fact" in trial 1, keeping it as "Fact" throughout makes recall easier. But you can also challenge yourself by creating fresh anchors each trial.</dd>
+                        <dt><strong>Q (Semantic Anchoring):</strong> Can I write down my semantic anchors?</dt>
+                        <dd><strong>A:</strong> You can, but that defeats the purpose! The cognitive training comes from maintaining these anchors <strong>in working memory only</strong>. Writing them down is like using a calculator instead of doing mental math.</dd>
                     </dl>
                 `,
-                speech: 'Pitfalls and FAQ. Question: Can I use the same word for East, the analogue? Answer: Prefer siblings, not duplicates. Candle to Lantern, not Candle to Candle. Question: My West choice feels too cartoonish. Answer: Opposite includes counter-role or antagonist, not just antonym. Order to Chaos. Plan to Improvisation. Question: What if my mapping breaks later? Answer: Use a Reframe action. Log it. Consistency matters more than stubbornness. Question: Do analogies change scoring? Answer: No. Scoring is formal. Analogies train your semantic agility.'
+                speech: 'Pitfalls and FAQ. Question: Can I use the same word for East, the analogue? Answer: Prefer siblings, not duplicates. Candle to Lantern, not Candle to Candle. Question: My West choice feels too cartoonish. Answer: Opposite includes counter-role or antagonist, not just antonym. Order to Chaos. Plan to Improvisation. Question: What if my mapping breaks later? Answer: Use a Reframe action. Log it. Consistency matters more than stubbornness. Question: Do analogies change scoring? Answer: No. Scoring is formal. Analogies train your semantic agility. Question, Level six: How do I know if a META premise is true or false? Answer: Deduce the hidden operator for each pair. Example: North to South equals Up-shift to Down-shift equals Opposite, West. East to West equals Analogue to Opposite equals Opposite, West. West equals West, so True. If operators differ, it is False. If both are orthogonal, no relationship, it is True. Question, Level six: What is an orthogonal relationship? Answer: No clear relationship exists. Example: North to East, Up-shift to Analogue, has no operator because they are perpendicular concepts. If both pairs are orthogonal, the premise is True, None equals None. Question, Level six: How does n-back matching work for META premises? Answer: Match on truth value, not operators. If n-back premise was True and current premise is True, MATCH. If n-back was False and current is False, MATCH. Different truth values, NO MATCH. Question, Level seven: What if I cannot think of a semantic pair? Answer: Use the concept hint shown in the modal. For North, Up-shift, think mature to immature, complex to simple. For South, reverse it. For East, think siblings, parallel roles. For West, think antonyms, counter-roles. Question, Level seven: Does it matter what semantic pairs I choose? Answer: Yes! They must match the operator concept. The system validates this. But within valid pairs, your choice is what matters. The cognitive load comes from generating and remembering your specific choices across n-back trials. Question, Level seven: Do I have to remember my semantic pairs from previous trials? Answer: Yes! That is the entire point. When evaluating n-back matches, you should recall what you anchored n trials ago. This generative working memory demand is what creates maximum g-load. Question, Level seven: Can I write down my semantic pairs? Answer: The system displays them with each premise, so you will see them. But for maximum training effect, try to recall them from memory first, then verify with the display.'
             },
             {
                 id: 'glossary',
@@ -1041,11 +1072,230 @@
                         <li><strong>Up-shift / Down-shift:</strong> moves along the Arc (North/South).</li>
                         <li><strong>Analogue / Opposite:</strong> lateral moves preserving or inverting role (East/West).</li>
                         <li><strong>Anchor:</strong> your chosen seed concept for a letter.</li>
-                        <li><strong>Compound mapping:</strong> a single letter carrying a composed phrase to satisfy multiple relations (e.g., “chaotic example”).</li>
-                    <li><strong>Reframe:</strong> deliberate change to an anchored concept, logged for consistency tracking.</li>
-                </ul>
-            `,
-                speech: 'Glossary. Arc of Abstraction: the mental continuum from concrete or particular to abstract or general. Up-shift and Down-shift: moves along the arc, north and south. Analogue and Opposite: lateral moves preserving or inverting role, east and west. Anchor: your chosen seed concept for a letter. Compound mapping: a single letter carrying a composed phrase to satisfy multiple relations, for example Chaotic example. Reframe: deliberate change to an anchored concept, logged for consistency tracking.'
+                        <li><strong>Compound mapping:</strong> a single letter carrying a composed phrase to satisfy multiple relations (e.g., "chaotic example").</li>
+                        <li><strong>Reframe:</strong> deliberate change to an anchored concept, logged for consistency tracking.</li>
+                        <li><strong>META_RELATIONAL premise (Level 6):</strong> a pure operator analogy comparing relationships between operators (e.g., "North to South as East to West"). No letters, only compass directions.</li>
+                        <li><strong>Truth value:</strong> whether a META premise evaluates to True or False. True if both operator pairs deduce to the same relationship (or both orthogonal). False otherwise.</li>
+                        <li><strong>Orthogonal relationship:</strong> when two operators have no clear relationship (neither same concept nor opposite). Example: Up-shift (North) to Analogue (East) = orthogonal.</li>
+                        <li><strong>Deduced operator:</strong> the hidden relationship between two operators. North→South (Up-shift→Down-shift) deduces to West (Opposite).</li>
+                        <li><strong>Semantic anchoring:</strong> a mental strategy where you anchor abstract letters to concrete concepts from your lived experience, then apply directional transformations. Example: J := "Fact", North(J→N) = "Fact"→"Theory".</li>
+                        <li><strong>Arc of Abstraction:</strong> the spectrum from concrete lived experience to abstract concepts. Semantic anchoring uses this arc to make abstract premises meaningful.</li>
+                        <li><strong>Mental transformation:</strong> applying directional operators to your semantic anchors in your head. Example: South("Theory") = down-shift → "Example".</li>
+                    </ul>
+                `,
+                speech: 'Glossary. Arc of Abstraction: the mental continuum from concrete or particular to abstract or general. Up-shift and Down-shift: moves along the arc, north and south. Analogue and Opposite: lateral moves preserving or inverting role, east and west. Anchor: your chosen seed concept for a letter. Compound mapping: a single letter carrying a composed phrase to satisfy multiple relations, for example Chaotic example. Reframe: deliberate change to an anchored concept, logged for consistency tracking. META RELATIONAL premise, Level six: a pure operator analogy comparing relationships between operators, for example North to South as East to West. No letters, only compass directions. Truth value: whether a META premise evaluates to true or false. True if both operator pairs deduce to the same relationship, or both orthogonal. False otherwise. Orthogonal relationship: when two operators have no clear relationship, neither same concept nor opposite. Example: Up-shift North to Analogue East equals orthogonal. Deduced operator: the hidden relationship between two operators. North to South, Up-shift to Down-shift, deduces to West, Opposite. User semantics, Level seven: your own imagination-generated semantic pairs anchoring META operators to concrete concepts, for example North to South equals Teacher to Student. Generative anchoring: creating semantic pairs from imagination rather than selecting from provided options. Maximizes cognitive load. Semantic validation: checking that your generated semantic pair matches the operator concept, for example Teacher to Student must match North Up-shift concept.'
+            },
+            {
+                id: 'level6',
+                title: 'Level 6: Meta-Relational Analogy',
+                html: `
+                    <h3>Level 6: Meta-Relational Analogy (The 'g' Leap)</h3>
+                    <p>This is <strong>peak fluid intelligence training</strong>. Level 6 introduces a completely new premise type: <strong>pure operator analogies</strong>.</p>
+
+                    <h4>What You'll See</h4>
+                    <p>Instead of letter-based premises like "A is north of B", you'll see:</p>
+                    <p style="text-align: center; font-size: 1.2rem; color: #3498db; margin: 20px 0;"><code>"North to South as East to West"</code></p>
+                    <p>No letters. Just operators. This is a <strong>6th-order relational statement</strong>—an analogy of relations.</p>
+
+                    <h4>How to Evaluate</h4>
+                    <ol>
+                        <li><strong>Map operators to concepts:</strong>
+                            <ul>
+                                <li>North = Up-shift</li>
+                                <li>South = Down-shift</li>
+                                <li>East = Analogue</li>
+                                <li>West = Opposite</li>
+                            </ul>
+                        </li>
+                        <li><strong>Deduce the relationship for each pair:</strong>
+                            <ul>
+                                <li>"North to South" = Up-shift → Down-shift = <strong>Opposite (West)</strong></li>
+                                <li>"East to West" = Analogue → Opposite = <strong>Opposite (West)</strong></li>
+                            </ul>
+                        </li>
+                        <li><strong>Compare the deduced operators:</strong>
+                            <ul>
+                                <li>West = West → Premise is <strong>TRUE</strong></li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <h4>Deduction Rules</h4>
+                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <tr style="background: rgba(52, 152, 219, 0.2);">
+                            <th style="padding: 10px; border: 1px solid #555;">From → To</th>
+                            <th style="padding: 10px; border: 1px solid #555;">Deduced Operator</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #555;">Up-shift → Down-shift (N→S)</td>
+                            <td style="padding: 10px; border: 1px solid #555;"><strong>West</strong> (Opposite)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #555;">Down-shift → Up-shift (S→N)</td>
+                            <td style="padding: 10px; border: 1px solid #555;"><strong>West</strong> (Opposite)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #555;">Analogue → Opposite (E→W)</td>
+                            <td style="padding: 10px; border: 1px solid #555;"><strong>West</strong> (Opposite)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #555;">Opposite → Analogue (W→E)</td>
+                            <td style="padding: 10px; border: 1px solid #555;"><strong>West</strong> (Opposite)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #555;">Up-shift → Up-shift (N→N)</td>
+                            <td style="padding: 10px; border: 1px solid #555;"><strong>East</strong> (Analogue)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #555;">Any same → same</td>
+                            <td style="padding: 10px; border: 1px solid #555;"><strong>East</strong> (Analogue)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #555;">Up/Down → Analogue/Opposite</td>
+                            <td style="padding: 10px; border: 1px solid #555;"><strong>None</strong> (Orthogonal)</td>
+                        </tr>
+                    </table>
+
+                    <h4>N-Back Matching</h4>
+                    <p>Matches are based on <strong>truth value</strong>, not operators:</p>
+                    <ul>
+                        <li><strong>MATCH:</strong> Both TRUE or both FALSE</li>
+                        <li><strong>NO MATCH:</strong> One TRUE, one FALSE</li>
+                    </ul>
+
+                    <h4>Practice Examples</h4>
+                    <p><strong>Example 1:</strong> <code>North to East as South to West</code></p>
+                    <ul>
+                        <li>N→E: Up-shift → Analogue = <strong>None</strong> (orthogonal)</li>
+                        <li>S→W: Down-shift → Opposite = <strong>None</strong> (orthogonal)</li>
+                        <li>None = None → <strong>TRUE</strong></li>
+                    </ul>
+
+                    <p><strong>Example 2:</strong> <code>North to South as North to East</code></p>
+                    <ul>
+                        <li>N→S: Up-shift → Down-shift = <strong>West</strong></li>
+                        <li>N→E: Up-shift → Analogue = <strong>None</strong></li>
+                        <li>West ≠ None → <strong>FALSE</strong></li>
+                    </ul>
+
+                    <p><strong>Example 3:</strong> <code>East to East as West to West</code></p>
+                    <ul>
+                        <li>E→E: Analogue → Analogue = <strong>East</strong></li>
+                        <li>W→W: Opposite → Opposite = <strong>East</strong></li>
+                        <li>East = East → <strong>TRUE</strong></li>
+                    </ul>
+
+                    <h4>How to Enable</h4>
+                    <p>Check the <strong>"Force Meta-Relational Trials (Level 6: g-Leap)"</strong> checkbox in the controls panel before starting a session.</p>
+                `,
+                speech: 'Level Six: Meta-Relational Analogy, The g-Leap. This is peak fluid intelligence training. Level six introduces a completely new premise type: pure operator analogies. What You Will See: Instead of letter-based premises like A is north of B, you will see North to South as East to West. No letters, just operators. This is a sixth-order relational statement, an analogy of relations. How to Evaluate: Step one, Map operators to concepts. North equals Up-shift. South equals Down-shift. East equals Analogue. West equals Opposite. Step two, Deduce the relationship for each pair. North to South equals Up-shift to Down-shift equals Opposite, West. East to West equals Analogue to Opposite equals Opposite, West. Step three, Compare the deduced operators. West equals West, so the premise is TRUE. Deduction Rules: Up-shift to Down-shift, North to South, deduces to West, Opposite. Down-shift to Up-shift, South to North, deduces to West, Opposite. Analogue to Opposite, East to West, deduces to West, Opposite. Opposite to Analogue, West to East, deduces to West, Opposite. Any same to same deduces to East, Analogue. Up or Down to Analogue or Opposite deduces to None, Orthogonal. N-Back Matching: Matches are based on truth value, not operators. MATCH when both TRUE or both FALSE. NO MATCH when one TRUE and one FALSE. How to Enable: Check the Force Meta-Relational Trials, Level six g-Leap, checkbox in the controls panel before starting a session.'
+            },
+            {
+                id: 'level7',
+                title: 'Level 7: Compound Operator Relational',
+                html: `
+                    <h3>Level 7: Compound Operator Relational (Maximum g-Load)</h3>
+                    <p>This is the <strong>ultimate cognitive challenge</strong>—combining abstract operator sequences, semantic anchoring, meta-relational reasoning, and working memory into a single unified task. Level 7 achieves <strong>7th-order reasoning</strong>.</p>
+
+                    <h4>The Concept</h4>
+                    <p>Level 7 premises look like this: <code>"north-west is north of south-east"</code></p>
+                    <p>This combines:</p>
+                    <ul>
+                        <li><strong>Compound operators:</strong> "north-west" is a sequence of transformations (north, then west)</li>
+                        <li><strong>Meta-relationships:</strong> The compound operators themselves are related by a meta-operator (north)</li>
+                        <li><strong>Semantic anchoring:</strong> You mentally anchor and transform concepts through the sequences</li>
+                        <li><strong>Abstract pairing:</strong> The two compound operators form a unified relational structure</li>
+                    </ul>
+
+                    <h4>How It Works (Purely Mental)</h4>
+                    <p><strong>Example: "north-west is north of south-east"</strong></p>
+                    <ol>
+                        <li><strong>Pick a seed concept for left side:</strong> "Order"</li>
+                        <li><strong>Apply north-west transformation:</strong>
+                            <ul>
+                                <li>North(Order) = up-shift → "System" (generalization)</li>
+                                <li>West(System) = opposite → "Chaos" (counterpart)</li>
+                                <li><strong>Result:</strong> north-west := "Chaos"</li>
+                            </ul>
+                        </li>
+                        <li><strong>Pick a seed concept for right side:</strong> "Calm"</li>
+                        <li><strong>Apply south-east transformation:</strong>
+                            <ul>
+                                <li>South(Calm) = down-shift → "Stillness" (concrete instance)</li>
+                                <li>East(Stillness) = analogue → "Peace" (sibling concept)</li>
+                                <li><strong>Result:</strong> south-east := "Peace"</li>
+                            </ul>
+                        </li>
+                        <li><strong>Evaluate meta-relationship:</strong>
+                            <ul>
+                                <li>Is "Chaos" north of "Peace"?</li>
+                                <li>Is Chaos a generalization of Peace?</li>
+                                <li><strong>Your judgment:</strong> Perhaps... Chaos is a broader state that can contain peaceful moments?</li>
+                            </ul>
+                        </li>
+                        <li><strong>Decide: MATCH or NO MATCH</strong> (based on your semantic model)</li>
+                    </ol>
+
+                    <h4>The 7th-Order Reasoning</h4>
+                    <p>This achieves 7 layers of abstraction:</p>
+                    <ol>
+                        <li><strong>1st-order:</strong> Concrete concepts (Order, Calm, Chaos, Peace)</li>
+                        <li><strong>2nd-order:</strong> Basic transformations (north = up-shift, west = opposite)</li>
+                        <li><strong>3rd-order:</strong> Sequential composition (north-west = up-shift then opposite)</li>
+                        <li><strong>4th-order:</strong> Compound transformations as entities (north-west becomes "Chaos")</li>
+                        <li><strong>5th-order:</strong> Meta-relationships between entities (Chaos is north of Peace)</li>
+                        <li><strong>6th-order:</strong> Abstract pairing (north-west and south-east form unified structure)</li>
+                        <li><strong>7th-order:</strong> Self-generated semantic evaluation across n-back trials</li>
+                    </ol>
+
+                    <h4>k Parameter Controls Complexity</h4>
+                    <p>The k slider controls <strong>number of compound atoms per premise</strong> (just like in atomic mode):</p>
+                    <ul>
+                        <li><strong>k=1:</strong> Single compound atom (e.g., "north-west is south of east-north")</li>
+                        <li><strong>k=2:</strong> Two compound atoms (e.g., "north-west is south of east-north; north-west is east of south-west")</li>
+                        <li><strong>k=3:</strong> Three compound atoms</li>
+                        <li><strong>k=4:</strong> Four compound atoms</li>
+                    </ul>
+                    <p>Note: Compound operators are <strong>always 2 operators</strong> (like "north-west"). Higher k creates multi-atom premises where compound operators appear in multiple relationships.</p>
+
+                    <h4>N-Back Matching</h4>
+                    <p>Because there's no formal truth value (evaluation is semantic), matching works differently:</p>
+                    <ul>
+                        <li>You make a judgment: MATCH or NO MATCH (based on your mental model)</li>
+                        <li>System tracks YOUR judgment</li>
+                        <li>N trials later, you must <strong>recall YOUR previous judgment</strong></li>
+                        <li>If current and n-back both MATCH → correct response is MATCH</li>
+                        <li>If both NO MATCH → correct response is MATCH</li>
+                        <li>If one MATCH and one NO MATCH → correct response is NO MATCH</li>
+                    </ul>
+
+                    <h4>Why This is Maximum g-Load</h4>
+                    <p>Level 7 combines ALL cognitive demands simultaneously:</p>
+                    <ol>
+                        <li><strong>Sequential transformation:</strong> Apply 2-4 operators in sequence</li>
+                        <li><strong>Semantic anchoring:</strong> Generate mental concepts for seeds</li>
+                        <li><strong>Working memory:</strong> Maintain transformation state across steps</li>
+                        <li><strong>Meta-reasoning:</strong> Evaluate relationships between compound results</li>
+                        <li><strong>Abstract pairing:</strong> Unified relational structure (not separate examples)</li>
+                        <li><strong>Subjective judgment:</strong> No formal answer—trust your mental model</li>
+                        <li><strong>N-back recall:</strong> Remember YOUR judgments across trials</li>
+                    </ol>
+
+                    <h4>Tips for Success</h4>
+                    <ul>
+                        <li><strong>Visualize the transformations:</strong> Actually imagine each step (Order→System→Chaos)</li>
+                        <li><strong>Use vivid seeds:</strong> Pick concrete concepts you can mentally manipulate</li>
+                        <li><strong>Trust your intuition:</strong> There's no "correct" answer—your semantic model is what matters</li>
+                        <li><strong>Be consistent:</strong> Use similar seed types to maintain coherence</li>
+                        <li><strong>Track your pattern:</strong> Notice if you tend to say MATCH or NO MATCH more often</li>
+                    </ul>
+
+                    <h4>How to Enable</h4>
+                    <p>Check the <strong>"Force Compound Operator Trials (Level 7: Maximum g-Load)"</strong> checkbox in the controls panel before starting a session. This automatically disables Level 6 (they're mutually exclusive).</p>
+
+                    <p><strong>Recommended settings for maximum challenge:</strong> n=5, k=4 (5-back with 4 compound atoms per premise)</p>
+                `,
+                speech: 'Level Seven: Compound Operator Relational, Maximum g-Load. This is the ultimate cognitive challenge, combining abstract operator sequences, semantic anchoring, meta-relational reasoning, and working memory into a single unified task. Level seven achieves seventh-order reasoning. The Concept: Level seven premises look like this: north-west is north of south-east. This combines compound operators like north-west which is a sequence of exactly two transformations, meta-relationships where compound operators are related by a meta-operator, semantic anchoring where you mentally anchor and transform concepts through sequences, and abstract pairing where the two compound operators form a unified relational structure. How It Works, Purely Mental: Example: north-west is north of south-east. Step one, Pick a seed concept for left side: Order. Step two, Apply north-west transformation: North of Order equals up-shift to System. West of System equals opposite to Chaos. Result: north-west equals Chaos. Step three, Pick a seed concept for right side: Calm. Step four, Apply south-east transformation: South of Calm equals down-shift to Stillness. East of Stillness equals analogue to Peace. Result: south-east equals Peace. Step five, Evaluate meta-relationship: Is Chaos north of Peace? Is Chaos a generalization of Peace? Your judgment decides. Step six, Decide: MATCH or NO MATCH based on your semantic model. Why This is Maximum g-Load: Level seven combines all cognitive demands simultaneously. Sequential transformation: apply two operators in sequence for each compound. Semantic anchoring: generate mental concepts for seeds. Working memory: maintain transformation state across steps. Meta-reasoning: evaluate relationships between compound results. Abstract pairing: unified relational structure, not separate examples. Subjective judgment: no formal answer, trust your mental model. N-back recall: remember your judgments across trials. How to Enable: Check the Force Compound Operator Trials, Level seven Maximum g-Load, checkbox in the controls panel before starting a session. Recommended settings for maximum challenge: n equals five, k equals four, five-back with four compound atoms per premise.'
             },
             {
                 id: 'walkthrough-n2-10',
@@ -1107,9 +1357,9 @@
                         li.innerHTML = `
                             <h4>Ex ${ex.id}. ${ex.theme}</h4>
                             <p><strong>Premise:</strong> ${ex.premise}</p>
-                            <p><strong>Anchors:</strong> ${ex.anchors.map(([L, c]) => `${L} := “${c}”`).join('; ')}</p>
+                            <p><strong>Anchors:</strong> ${ex.anchors.map(([L, c]) => `${L} := "${c}"`).join('; ')}</p>
                             <p><strong>Transforms:</strong> ${ex.transforms.join(' • ')}</p>
-                            <p><strong>Resulting mapping:</strong> ${ex.mapping.map(([L, c]) => `${L} → “${c}”`).join('; ')}</p>
+                            <p><strong>Resulting mapping:</strong> ${ex.mapping.map(([L, c]) => `${L} → "${c}"`).join('; ')}</p>
                             <p><em>Why it works:</em> ${ex.rationale}</p>
                             <div class="exActions">
                                 <button data-speak="${ex.id}">Speak summary</button>
@@ -1248,7 +1498,7 @@
                   anchors:[["J","Theory"],["P","Order"]],
                   transforms:["South(J→Z): Theory → Example","West(P→Z): Order → Chaos (compound: Chaotic example)"],
                   mapping:[["J","Theory"],["P","Order"],["Z","Chaotic example"]],
-                  rationale:"Z must satisfy both; a ‘Chaotic example’ fits down-shift and opposition."
+                  rationale:"Z must satisfy both; a 'Chaotic example' fits down-shift and opposition."
                 },
                 { id:12, level:"double-same-head", theme:"Writing — Paragraph role",
                   premise:"A is north of B; A is east of C.",
@@ -1290,7 +1540,7 @@
                   anchors:[["R","Procedure"],["S","Anarchy"]],
                   transforms:["North(R→Q): Procedure → Policy","West(S→Q): Anarchy → Policy"],
                   mapping:[["R","Procedure"],["S","Anarchy"],["Q","Policy"]],
-                  rationale:"Policy sits above Procedure and opposes Anarchy’s absence of rules."
+                  rationale:"Policy sits above Procedure and opposes Anarchy's absence of rules."
                 },
                 { id:18, level:"double-same-head", theme:"Roles — Medicine",
                   premise:"T is east of U; T is west of V.",
@@ -1475,7 +1725,7 @@
                     </li>
                     <li>
                         <p><strong>Trial 5 — Premise:</strong> D is east of J.</p>
-                        <p><strong>Mapping:</strong> Reuse D, J; East: both are light sources (analogue). Optionally note D as “burst light”.</p>
+                        <p><strong>Mapping:</strong> Reuse D, J; East: both are light sources (analogue). Optionally note D as "burst light".</p>
                         <p><strong>n-back-2 vs Trial 3:</strong> <span class="nomatch">NO MATCH</span> (Trial 3 was South; axis mismatch, not an allowed inversion).</p>
                     </li>
                     <li>
@@ -1507,11 +1757,11 @@
 
                 <h4>When the same letter returns: do this</h4>
                 <ul class="returns">
-                    <li><strong>Reuse</strong> the original concept; don’t re-anchor.</li>
+                    <li><strong>Reuse</strong> the original concept; don't re-anchor.</li>
                     <li><strong>Check</strong> the new relation versus that concept (N up, S down, E analogue, W opposite).</li>
-                    <li>If a letter must satisfy two relations, use a <em>compound nuance</em> (“chaotic example”, “burst light”) while keeping identity.</li>
+                    <li>If a letter must satisfy two relations, use a <em>compound nuance</em> ("chaotic example", "burst light") while keeping identity.</li>
                     <li><strong>Reframe</strong> only if the old choice breaks consistency across trials; if you reframe, note it.</li>
-                    <li><strong>Infer context across letters:</strong> if K is north of J and P is above K, then P sits above J as well (transitively in your mental map). Keep your analogies coherent with such inferences while remembering the game’s logical engine remains the final judge of matches.</li>
+                    <li><strong>Infer context across letters:</strong> if K is north of J and P is above K, then P sits above J as well (transitively in your mental map). Keep your analogies coherent with such inferences while remembering the game's logical engine remains the final judge of matches.</li>
                 </ul>
 
                 <p class="closing"><strong>Mantra:</strong> Anchor → Transform → Cohere → Commit → Recall → Update.</p>
@@ -1569,7 +1819,7 @@
 
         async function speakOnce(text) {
             if (!text) return;
-            if (!engine || !engine.voice) return;
+            if (!engine || !engine.voice || !engine.voice.voiceReady) return;
             if (typeof engine.voice.cancelAndWait === 'function') {
                 await engine.voice.cancelAndWait();
             }
@@ -1621,9 +1871,7 @@
 
         function valid(sess, trialToken, phaseToken) {
             return Boolean(
-                session &&
-                sess &&
-                sess.epoch === session.epoch &&
+                session && sess && sess.epoch === session.epoch &&
                 trialToken === session.trialToken &&
                 (!phaseToken || phaseToken === session.phaseToken) &&
                 !sess.abort.signal.aborted
@@ -1676,11 +1924,13 @@
             function set(label, ms, trialToken, signal, cb) {
                 const timerId = ++id;
                 const handle = setTimeout(() => {
-                    if (!valid(session, trialToken)) {
+                    const isValid = valid(session, trialToken);
+                    if (!isValid) {
                         clear(timerId);
-                        return;
+                    } else {
+                        live.delete(timerId);
                     }
-                    live.delete(timerId);
+                    // Always call callback to prevent promise hangs
                     cb?.();
                 }, ms);
                 live.set(timerId, { handle, label, trialToken, started: performance.now() });
@@ -1964,16 +2214,67 @@
         }
 
         class Premise {
-            constructor(atoms) {
-                this.atoms = [...atoms].sort((a, b) => {
-                    if (a.axis !== b.axis) return a.axis.localeCompare(b.axis);
-                    if (a.head !== b.head) return a.head.localeCompare(b.head);
-                    return a.tail.localeCompare(b.tail);
-                });
-                this.features = this.computeFeatures();
+            constructor(config) {
+                if (Array.isArray(config)) {
+                    // ATOMIC premise path
+                    this.type = 'ATOMIC';
+                    this.atoms = [...config].sort((a, b) => {
+                        if (a.axis !== b.axis) return a.axis.localeCompare(b.axis);
+                        if (a.head !== b.head) return a.head.localeCompare(b.head);
+                        return a.tail.localeCompare(b.tail);
+                    });
+                    this.meta = null;
+                    this.semanticPairs = null;
+                } else if (config && config.type === 'META_RELATIONAL') {
+                    // META_RELATIONAL premise path (Level 6)
+                    this.type = 'META_RELATIONAL';
+                    this.atoms = [];  // Always ensure atoms is an array (empty for META)
+
+                    // Validate META operators
+                    const validOps = ['North', 'South', 'East', 'West'];
+                    const p = config.p || [];
+
+                    // Must be even number (pairs) and at least 4 (minimum 2 pairs for analogy)
+                    if (!Array.isArray(p) || p.length < 4 || p.length % 2 !== 0) {
+                        console.error('Invalid META premise: operators must be even array with min 4', p);
+                        throw new Error(`Invalid META premise: expected even count >= 4, got ${p.length}`);
+                    }
+
+                    // Verify all operators are valid
+                    const invalid = p.filter(op => !validOps.includes(op));
+                    if (invalid.length > 0) {
+                        console.error('Invalid META operators:', invalid);
+                        throw new Error(`Invalid META operators: ${invalid.join(', ')}`);
+                    }
+
+                    // Note: Operators CAN repeat for k>2 (e.g., "North to South as North to East")
+
+                    this.meta = {
+                        p: [...p]  // Clone array
+                    };
+                } else {
+                    console.error('Invalid Premise constructor argument:', config);
+                    throw new Error('Invalid Premise constructor argument');
+                }
+
+                try {
+                    this.features = this.computeFeatures();
+                } catch (err) {
+                    console.error('Failed to compute features for premise:', err);
+                    // Provide default features to prevent crashes
+                    this.features = {
+                        lettersSet: new Set(),
+                        degreeVector: new Map(),
+                        skeletonIsoSignature: this.type.includes('META') ? 'META_ISO' : 'ERROR',
+                        atomAxisProfile: new Map()
+                    };
+                }
             }
 
             getLetters() {
+                if (this.type === 'META_RELATIONAL') {
+                    return new Set(this.meta.p);
+                }
                 const letters = new Set();
                 this.atoms.forEach(atom => {
                     letters.add(atom.head);
@@ -1983,6 +2284,15 @@
             }
 
             computeFeatures() {
+                if (this.type === 'META_RELATIONAL') {
+                    return {
+                        lettersSet: this.getLetters(),
+                        degreeVector: new Map(),
+                        skeletonIsoSignature: 'META_ISO',
+                        atomAxisProfile: new Map()
+                    };
+                }
+
                 const lettersSet = new Set();
                 const degreeVector = new Map();
                 const axisProfile = new Map();
@@ -2026,22 +2336,51 @@
             }
 
             atomKeys() {
+                if (this.type === 'META_RELATIONAL') {
+                    return [this.toKey()];
+                }
                 return this.atoms.map(atom => atom.toKey());
             }
 
             toKey() {
+                if (this.type === 'META_RELATIONAL') {
+                    return `META:${this.meta.p.join(',')}`;
+                }
                 return this.atomKeys().join('|');
             }
 
             toString() {
+                if (this.type === 'META_RELATIONAL') {
+                    const ops = this.meta.p;
+                    const pairs = [];
+                    for (let i = 0; i < ops.length; i += 2) {
+                        pairs.push(`${ops[i]} to ${ops[i + 1]}`);
+                    }
+                    return pairs.join(' as ');
+                }
                 return this.atoms.map(a => a.toString()).join('; ');
             }
 
             toNaturalSpeech() {
+                if (this.type === 'META_RELATIONAL') {
+                    const ops = this.meta.p;
+                    const pairs = [];
+                    for (let i = 0; i < ops.length; i += 2) {
+                        pairs.push(`${ops[i]} to ${ops[i + 1]}`);
+                    }
+                    return pairs.join('... as ') + '.';
+                }
                 return this.atoms.map(atom => `${atom.head} is ${RELATION_WORDS[atom.axis]} ${atom.tail}`).join('; ') + '.';
             }
 
             mirrorKey() {
+                if (this.type === 'META_RELATIONAL') {
+                    // For META premises, canonical form is the sorted version
+                    const key1 = this.toKey();
+                    const reversed = [...this.meta.p].reverse();
+                    const key2 = `META:${reversed.join(',')}`;
+                    return key1 < key2 ? key1 : key2;
+                }
                 const canonicalAtoms = this.atoms.map(atom => {
                     const inverted = Atom.invert(atom);
                     const current = `${atom.axis}|${atom.head}|${atom.tail}`;
@@ -2052,6 +2391,9 @@
             }
 
             isoSignature() {
+                if (this.type === 'META_RELATIONAL') {
+                    return 'META_ISO';
+                }
                 const letterMap = new Map();
                 let nextCharCode = 'a'.charCodeAt(0);
                 const normalized = this.atoms.map(atom => {
@@ -2426,10 +2768,24 @@
 
             lettersOf(premise) {
                 const letters = new Set();
-                premise.atoms.forEach(atom => {
-                    letters.add(atom.head);
-                    letters.add(atom.tail);
-                });
+
+                // META premises don't have atoms in the same way
+                if (premise.type === 'META_RELATIONAL') {
+                    if (premise.meta && premise.meta.p) {
+                        premise.meta.p.forEach(op => letters.add(op));
+                    }
+                    return letters;
+                }
+
+                // ATOMIC premises
+                if (premise.atoms && Array.isArray(premise.atoms)) {
+                    premise.atoms.forEach(atom => {
+                        if (atom && atom.head && atom.tail) {
+                            letters.add(atom.head);
+                            letters.add(atom.tail);
+                        }
+                    });
+                }
                 return letters;
             }
 
@@ -2517,7 +2873,8 @@
                 }
 
                 const mapping = this.computeInvertibleMapping(atomsA, atomsB);
-                if (!mapping) {
+                // Allow non-invertible mapping if Transitivity is on, to enable A->C derivable from A->B
+                if (!mapping && !this.transitivityEnabled) {
                     return { ok: false, reason: 'mapping' };
                 }
 
@@ -2572,6 +2929,16 @@
                     return { match: false, reason: 'identity' };
                 }
 
+                // Router: dispatch based on premise type
+                if (nBackPremise.type !== candidatePremise.type) {
+                    return { match: false, reason: 'type-mismatch' };
+                }
+
+                if (nBackPremise.type === 'META_RELATIONAL') {
+                    return this.computeMetaEquivalence(nBackPremise, candidatePremise);
+                }
+
+                // ATOMIC premise path (legacy)
                 const result = this.Equivalent(nBackPremise, candidatePremise, windowAtoms, midAtoms || []);
                 if (!result.ok) {
                     const response = { match: false, reason: result.reason };
@@ -2581,7 +2948,7 @@
                             return {
                                 match: true,
                                 certificate: {
-                                    type: 'invertible',
+                                    type: 'transitive-closure',
                                     mapping: result.mapping || [],
                                     sharedLetters: result.sharedLetters || [],
                                     parity: true,
@@ -2604,6 +2971,148 @@
 
                 return { match: true, certificate, midWindowDerivable: false };
             }
+
+
+            deduceImpliedOperator(p1, p2) {
+                // Robust validation
+                if (typeof p1 !== 'string' || typeof p2 !== 'string') {
+                    console.error('deduceImpliedOperator: invalid input types', p1, p2);
+                    return null;
+                }
+
+                // Maps compass operator names to their concepts
+                const CONCEPT_MAP = {
+                    'North': 'Up-shift',
+                    'South': 'Down-shift',
+                    'East': 'Analogue',
+                    'West': 'Opposite'
+                };
+
+                const c1 = CONCEPT_MAP[p1];
+                const c2 = CONCEPT_MAP[p2];
+
+                if (!c1 || !c2) {
+                    console.warn('deduceImpliedOperator: unknown operators', p1, p2);
+                    return null;
+                }
+
+                // Same concept = Analogue (East)
+                if (c1 === c2) {
+                    return 'East';
+                }
+
+                // Opposite concepts = West
+                const opposites = [
+                    ['Up-shift', 'Down-shift'],
+                    ['Down-shift', 'Up-shift'],
+                    ['Analogue', 'Opposite'],
+                    ['Opposite', 'Analogue']
+                ];
+
+                for (const [a, b] of opposites) {
+                    if (c1 === a && c2 === b) {
+                        return 'West';
+                    }
+                }
+
+                // Orthogonal pairs (Up/Down with Analogue/Opposite) = null
+                return null;
+            }
+
+            getMetaTruthValue(premise) {
+                // Robust validation
+                if (!premise || premise.type !== 'META_RELATIONAL') {
+                    console.error('getMetaTruthValue: not a META premise', premise);
+                    return 'INVALID';
+                }
+
+                if (!premise.meta || !Array.isArray(premise.meta.p)) {
+                    console.error('getMetaTruthValue: invalid META structure', premise.meta);
+                    return 'INVALID';
+                }
+
+                const operators = premise.meta.p;
+                const length = operators.length;
+
+                // Must be even number (pairs) and at least 4 (minimum 2 pairs for analogy)
+                if (length < 4 || length % 2 !== 0) {
+                    console.error('getMetaTruthValue: invalid operator count', length);
+                    return 'INVALID';
+                }
+
+                try {
+                    const numPairs = length / 2;
+                    const deducedOperators = [];
+
+                    // Deduce implied operator for each pair
+                    for (let i = 0; i < numPairs; i++) {
+                        const p0 = operators[i * 2];
+                        const p1 = operators[i * 2 + 1];
+                        const deduced = this.deduceImpliedOperator(p0, p1);
+                        deducedOperators.push(deduced);
+                    }
+
+                    // Check if all deduced operators are the same
+                    const firstOp = deducedOperators[0];
+                    const allSame = deducedOperators.every(op => {
+                        // null === null is true (orthogonal pairs)
+                        // 'West' === 'West' is true
+                        // null === 'West' is false
+                        return op === firstOp;
+                    });
+
+                    return allSame;  // Returns true or false
+                } catch (err) {
+                    console.error('getMetaTruthValue: exception', err, premise);
+                    return 'INVALID';
+                }
+            }
+
+            computeMetaEquivalence(nBackPremise, candidatePremise) {
+                // Defensive validation
+                if (!nBackPremise || !candidatePremise) {
+                    console.error('computeMetaEquivalence: null premise', { nBackPremise, candidatePremise });
+                    return { match: false, reason: 'null-premise' };
+                }
+
+                if (nBackPremise.type !== 'META_RELATIONAL' || candidatePremise.type !== 'META_RELATIONAL') {
+                    console.error('computeMetaEquivalence: not META premises', {
+                        nBackType: nBackPremise.type,
+                        candidateType: candidatePremise.type
+                    });
+                    return { match: false, reason: 'type-mismatch' };
+                }
+
+                try {
+                    const truthA = this.getMetaTruthValue(nBackPremise);
+                    const truthB = this.getMetaTruthValue(candidatePremise);
+
+                    if (truthA === 'INVALID' || truthB === 'INVALID') {
+                        console.warn('computeMetaEquivalence: invalid truth value', { truthA, truthB });
+                        return { match: false, reason: 'meta-invalid' };
+                    }
+
+                    // 6th-order match: truth values must be equal
+                    const match = (truthA === truthB);
+
+                    return {
+                        match,
+                        certificate: match ? {
+                            type: 'meta',
+                            truthA,
+                            truthB,
+                            nBackOperators: nBackPremise.meta.p,
+                            candidateOperators: candidatePremise.meta.p
+                        } : null,
+                        midWindowDerivable: false,
+                        reason: match ? 'truth-match' : 'truth-mismatch'
+                    };
+                } catch (err) {
+                    console.error('computeMetaEquivalence: exception', err);
+                    return { match: false, reason: 'exception', error: err.message };
+                }
+            }
+
         }
 
         class MatchPlanner {
@@ -2834,15 +3343,35 @@
             }
 
             updateUsage(premise) {
-                premise.atoms.forEach(atom => {
-                    this.ensureLetterUsage(atom.head).head += 1;
-                    this.ensureLetterUsage(atom.tail).tail += 1;
-                    this.axisUsage[atom.axis] += 1;
-                });
+                // META premises don't have atoms to track usage for
+                if (!premise || premise.type === 'META_RELATIONAL') {
+                    return;
+                }
+
+                // ATOMIC premises - track letter and axis usage
+                if (premise.atoms && Array.isArray(premise.atoms)) {
+                    premise.atoms.forEach(atom => {
+                        if (atom && atom.head && atom.tail && atom.axis) {
+                            this.ensureLetterUsage(atom.head).head += 1;
+                            this.ensureLetterUsage(atom.tail).tail += 1;
+                            if (this.axisUsage[atom.axis] !== undefined) {
+                                this.axisUsage[atom.axis] += 1;
+                            }
+                        }
+                    });
+                }
             }
 
             recordPremise(premise, atoms, metadata) {
-                this.constraintStore.push({ step: this.currentStep, atoms });
+                // Defensive: ensure atoms is an array
+                const safeAtoms = (Array.isArray(atoms) && atoms.length > 0) ? atoms : [];
+
+                // For META premises, atoms will be empty array - that's expected
+                if (premise && premise.type === 'META_RELATIONAL') {
+                    console.log('Recording META premise:', premise.toString(), metadata);
+                }
+
+                this.constraintStore.push({ step: this.currentStep, atoms: safeAtoms });
                 this.premiseHistory.push({ step: this.currentStep, premise, metadata });
                 this.currentStep += 1;
 
@@ -2898,8 +3427,66 @@
                     middleAtoms,
                     avoidLetters,
                     allowOverride,
-                    foilPlan
+                    foilPlan,
+                    forceMetaLeap,
+                    forceCompoundLeap
                 } = options;
+
+                // COMPOUND OPERATOR premise generation path (Level 7)
+                if (forceCompoundLeap) {
+                    try {
+                        const compoundPremise = this.buildCompoundOperatorPremise(plannedMatch, nBackPremise, k);
+                        if (compoundPremise && compoundPremise.atoms && compoundPremise.atoms.length > 0) {
+                            const signatures = this.state.novelty.buildSignatures(compoundPremise);
+                            return {
+                                premise: compoundPremise,
+                                signatures,
+                                novelty: { noveltyScores: {}, blocked: false },
+                                satResult: { ok: true, coordinates: new Map() },
+                                certificate: null,
+                                midDerivable: false,
+                                attempts: 1,
+                                modeUsed: 'COMPOUND_OPERATOR',
+                                features: compoundPremise.getFeatures(),
+                                foilType: null,
+                                planMatch: plannedMatch
+                            };
+                        } else {
+                            console.error('buildCompoundOperatorPremise returned invalid premise', compoundPremise);
+                        }
+                    } catch (err) {
+                        console.error('COMPOUND premise generation failed', err);
+                        // Fall through to META or atomic generation as emergency fallback
+                    }
+                }
+
+                // META premise generation path (Level 6)
+                if (forceMetaLeap) {
+                    try {
+                        const metaPremise = this.buildMetaPremise(plannedMatch, nBackPremise, k);
+                        if (metaPremise && metaPremise.type === 'META_RELATIONAL') {
+                            const signatures = this.state.novelty.buildSignatures(metaPremise);
+                            return {
+                                premise: metaPremise,
+                                signatures,
+                                novelty: { noveltyScores: {}, blocked: false },
+                                satResult: { ok: true, coordinates: new Map() },
+                                certificate: null,
+                                midDerivable: false,
+                                attempts: 1,
+                                modeUsed: 'META',
+                                features: metaPremise.getFeatures(),
+                                foilType: null,
+                                planMatch: plannedMatch
+                            };
+                        } else {
+                            console.error('buildMetaPremise returned invalid premise', metaPremise);
+                        }
+                    } catch (err) {
+                        console.error('META premise generation failed', err);
+                        // Fall through to atomic generation as emergency fallback
+                    }
+                }
 
                 const windowAtoms = this.state.getWindowAtoms();
                 let bestCandidate = null;
@@ -3244,14 +3831,13 @@
                     while (atoms.length < target && guard < 60) {
                         guard++;
                         const head = this.state.rng.choice(refLetters);
-                        let tail = this.state.rng.choice(refLetters);
-                        if (tail === head) {
-                            const alternative = this.sampleNewLetter(new Set([...refLetters]));
-                            if (alternative) {
-                                tail = alternative;
-                            }
+                        if (avoidLetters && avoidLetters.has(head)) continue;
+                        let tailCandidates = refLetters.filter(letter => letter !== head);
+                        if (avoidLetters) {
+                            tailCandidates = tailCandidates.filter(letter => !avoidLetters.has(letter));
                         }
-                        if (tail === head) continue;
+                        if (tailCandidates.length === 0) continue;
+                        const tail = this.state.rng.choice(tailCandidates);
                         const axis = this.state.rng.choice(axes);
                         const candidate = new Atom(axis, head, tail);
                         if (atoms.some(atom => atom.toKey() === candidate.toKey())) continue;
@@ -3684,76 +4270,950 @@
 
                 return atoms.length === k ? atoms : null;
             }
+
+            buildMetaPremise(plannedMatch, nBackPremise, k) {
+                // Generate a META_RELATIONAL premise (6th-order reasoning)
+                // k controls number of operator pairs: k=2 → 4 ops, k=3 → 6 ops, k=4 → 8 ops
+                const META_OPERATORS = ['North', 'South', 'East', 'West'];
+
+                // Determine number of operators needed (k pairs = k*2 operators)
+                // Minimum 2 pairs (4 operators) for a valid analogy
+                const numPairs = Math.max(2, Math.min(4, k || 2));
+                const numOperators = numPairs * 2;
+
+                try {
+                    if (plannedMatch && nBackPremise && nBackPremise.type === 'META_RELATIONAL') {
+                        // For match trials, create a premise with same truth value
+                        const nBackTruth = this.equivalence.getMetaTruthValue(nBackPremise);
+
+                        // Defensive check
+                        if (nBackTruth === 'INVALID') {
+                            console.warn('buildMetaPremise: n-back has invalid truth value, generating random');
+                            const shuffled = this.generateMetaOperators(numOperators);
+                            return new Premise({
+                                type: 'META_RELATIONAL',
+                                p: shuffled
+                            });
+                        }
+
+                        // Generate premises until we find one with matching truth value
+                        for (let attempt = 0; attempt < 50; attempt++) {
+                            const shuffled = this.generateMetaOperators(numOperators);
+
+                            try {
+                                const candidate = new Premise({
+                                    type: 'META_RELATIONAL',
+                                    p: shuffled
+                                });
+
+                                const candidateTruth = this.equivalence.getMetaTruthValue(candidate);
+
+                                // Accept if truth values match AND not identical to n-back
+                                if (candidateTruth === nBackTruth && candidate.toKey() !== nBackPremise.toKey()) {
+                                    return candidate;
+                                }
+                            } catch (err) {
+                                console.warn('buildMetaPremise: candidate creation failed', err);
+                                continue;
+                            }
+                        }
+
+                        console.warn('buildMetaPremise: failed to find matching truth value after 50 attempts');
+                    }
+
+                    // For non-match or first trials, or fallback, generate a random META premise
+                    const shuffled = this.generateMetaOperators(numOperators);
+                    return new Premise({
+                        type: 'META_RELATIONAL',
+                        p: shuffled
+                    });
+                } catch (err) {
+                    console.error('buildMetaPremise: critical error', err);
+                    // Ultimate fallback - return a known valid META premise
+                    return new Premise({
+                        type: 'META_RELATIONAL',
+                        p: this.generateMetaOperators(numOperators)
+                    });
+                }
+            }
+
+            generateMetaOperators(numOperators) {
+                // Generate numOperators operators, ensuring NO consecutive duplicates
+                // Example: ['North', 'South', 'East', 'West'] OK
+                // Example: ['North', 'North', 'East', 'West'] INVALID (North-North is identity)
+                const META_OPERATORS = ['North', 'South', 'East', 'West'];
+                const result = [];
+
+                for (let i = 0; i < numOperators; i++) {
+                    let op;
+                    let attempts = 0;
+                    do {
+                        op = this.state.rng.choice(META_OPERATORS);
+                        attempts++;
+                        // Prevent infinite loop
+                        if (attempts > 50) {
+                            console.warn('generateMetaOperators: too many attempts to avoid duplicate');
+                            break;
+                        }
+                    } while (i > 0 && op === result[i - 1]);  // No consecutive duplicates
+
+                    result.push(op);
+                }
+
+                return result;
+            }
+
+            generateCompoundOperator() {
+                // Generate a compound operator like "north-west" or "south-east"
+                // ALWAYS exactly 2 DIFFERENT operators (no "north-north" identity)
+                const META_OPERATORS = ['north', 'south', 'east', 'west'];
+                const op1 = this.state.rng.choice(META_OPERATORS);
+
+                // Ensure op2 is different from op1
+                const otherOps = META_OPERATORS.filter(op => op !== op1);
+                const op2 = this.state.rng.choice(otherOps);
+
+                return `${op1}-${op2}`;
+            }
+
+            buildCompoundOperatorPremise(plannedMatch, nBackPremise, k) {
+                // Generate Level 7: Compound Operator Relational premise
+                // Example: "north-west is north of south-east"
+                // k controls number of atoms: k=1 → 1 atom, k=2 → 2 atoms, etc.
+
+                const numAtoms = Math.max(1, Math.min(4, k || 1));
+                const META_AXES = ['N', 'S', 'E', 'W'];
+                const atoms = [];
+
+                try {
+                    for (let i = 0; i < numAtoms; i++) {
+                        // Generate two compound operators (always 2-operator sequences)
+                        const compound1 = this.generateCompoundOperator();
+                        const compound2 = this.generateCompoundOperator();
+
+                        // Choose random meta-operator to relate them
+                        const metaAxis = this.state.rng.choice(META_AXES);
+
+                        // Create atom with compound operators as head/tail
+                        atoms.push(new Atom(metaAxis, compound1, compound2));
+                    }
+
+                    return new Premise(atoms);
+                } catch (err) {
+                    console.error('buildCompoundOperatorPremise: critical error', err);
+                    // Fallback to simple compound premise
+                    return new Premise([new Atom('N', 'north-west', 'south-east')]);
+                }
+            }
+
         }
+
+        // ═══════════════════════════════════════════════════════════════
+        // iOS-SPECIFIC FEMALE VOICE ENFORCEMENT SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        // This VoiceSynthesis class implements comprehensive iOS Safari
+        // Web Speech API bug workarounds to prevent male voice (Reed) usage.
+        //
+        // iOS CRITICAL BUGS FIXED:
+        //
+        // 1. VOICE OBJECT STALENESS (PRIMARY BUG):
+        //    - Voice objects from getVoices() become "stale" when cached
+        //    - Stale voice objects assigned to utterance.voice are IGNORED
+        //    - iOS falls back to system default voice (Reed - MALE)
+        //    - FIX: Store voiceName + voiceLang as STRINGS only
+        //    - FIX: Call getFreshVoiceObject() before EVERY speak()
+        //
+        // 2. DUAL PROPERTY REQUIREMENT:
+        //    - iOS requires BOTH utterance.voice AND utterance.lang set
+        //    - Setting only ONE property causes iOS to IGNORE both
+        //    - iOS falls back to default voice (Reed - MALE)
+        //    - FIX: Always set both properties together in speak()
+        //
+        // 3. ONE VOICE PER LOCALE LIMITATION:
+        //    - iOS allows only ONE voice per locale to be selected
+        //    - For en-US, that voice is Samantha (FEMALE) - this is GOOD
+        //    - Attempting other en-US voices causes fallback to Reed
+        //    - FIX: Priority cascade locks to Samantha for iOS
+        //
+        // 4. ASYNCHRONOUS VOICE LOADING:
+        //    - getVoices() returns empty array on first call
+        //    - voiceschanged event is unreliable/never fires on Safari
+        //    - FIX: Polling mechanism (250ms interval, 3000ms timeout)
+        //
+        // 5. USER GESTURE REQUIREMENT:
+        //    - iOS requires speechSynthesis triggered from user interaction
+        //    - FIX: unlockIOSSpeech() speaks empty utterance on button click
+        //
+        // SAFETY LAYERS:
+        // - Layer 1: Null check - refuse if voiceName/voiceLang null
+        // - Layer 2: Male voice pattern check - refuse if matches Reed, etc.
+        // - Layer 3: Female voice confirmation - warn if no female match
+        // - Layer 4: utterance.voice verification - refuse if not set
+        // - Layer 5: iOS dual-property check - refuse if only one set
+        // - Layer 6: Final male voice check - refuse if assigned voice is male
+        //
+        // All safety checks REFUSE TO SPEAK rather than risk default voice.
+        // ═══════════════════════════════════════════════════════════════
 
         class VoiceSynthesis {
             constructor() {
                 this.synth = window.speechSynthesis;
-                this.voice = null;
+
+                // ═══════════════════════════════════════════════════════════════
+                // iOS CRITICAL FIX: Store voice NAME and LANG, NOT voice object
+                // Voice objects become "stale" on iOS and cause fallback to Reed
+                // ═══════════════════════════════════════════════════════════════
+                this.voiceName = null;          // Store voice name as string
+                this.voiceLang = null;          // Store voice lang as string
                 this.voiceReady = false;
                 this.pitch = 1.2;
                 this.rate = 0.9;
                 this.volume = 1.0;
                 this.sessionToken = makeEpoch();
+
+                // iOS-specific flags
+                this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                this.iosGestureUnlocked = false;
+
+                console.log(`🎤 VoiceSynthesis initialized - Platform: ${this.isIOS ? 'iOS' : 'Desktop'}`);
             }
 
+            // ═══════════════════════════════════════════════════════════════
+            // iOS CRITICAL: User Gesture Unlock
+            // iOS requires speechSynthesis to be triggered from user interaction
+            // Call this on voice-mode button click to unlock speech for session
+            // ═══════════════════════════════════════════════════════════════
+            unlockIOSSpeech() {
+                if (!this.isIOS || this.iosGestureUnlocked) {
+                    return;
+                }
+
+                try {
+                    // Speak empty utterance to unlock iOS speech synthesis
+                    const unlockUtterance = new SpeechSynthesisUtterance('');
+                    unlockUtterance.volume = 0;
+                    this.synth.speak(unlockUtterance);
+                    this.iosGestureUnlocked = true;
+                    console.log('✓ iOS speech synthesis unlocked via user gesture');
+                } catch (err) {
+                    console.warn('iOS gesture unlock failed:', err);
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // iOS CRITICAL: Polling-Based Voice Loading
+            // iOS Safari returns empty array on first getVoices() call
+            // voiceschanged event is unreliable - use polling instead
+            // ═══════════════════════════════════════════════════════════════
             async initialize() {
-                await new Promise(resolve => {
-                    const attempt = () => {
-                        const voices = this.synth.getVoices();
-                        if (!voices || voices.length === 0) {
-                            setTimeout(attempt, 200);
-                            return;
-                        }
-                        this.selectVoice(voices);
-                        this.voiceReady = true;
-                        resolve();
+                console.log('═══════════════════════════════════════════════════════════════');
+                console.log(`  Initializing voice system - Platform: ${this.isIOS ? 'iOS' : 'Desktop'}`);
+                console.log('═══════════════════════════════════════════════════════════════');
+
+                // iOS: Unlock speech from user gesture (if not already done)
+                if (this.isIOS) {
+                    this.unlockIOSSpeech();
+                }
+
+                return new Promise((resolve, reject) => {
+                    let pollAttempts = 0;
+                    const maxPollAttempts = 12; // 12 × 250ms = 3000ms max wait
+                    const pollIntervalMs = 250; // Poll every 250ms
+
+                    let pollInterval = null;
+                    let pollTimeout = null;
+
+                    const stopPolling = () => {
+                        if (pollInterval) clearInterval(pollInterval);
+                        if (pollTimeout) clearTimeout(pollTimeout);
                     };
-                    attempt();
+
+                    // Polling function
+                    const pollForVoices = () => {
+                        pollAttempts++;
+                        console.log(`📢 Polling for voices... attempt ${pollAttempts}/${maxPollAttempts}`);
+
+                        try {
+                            const voices = this.synth.getVoices();
+                            console.log(`  Retrieved ${voices?.length || 0} voices from speechSynthesis.getVoices()`);
+
+                            if (voices && voices.length > 0) {
+                                // SUCCESS: Voices loaded
+                                stopPolling();
+                                console.log(`✓ Voices loaded successfully after ${pollAttempts} attempts`);
+
+                                try {
+                                    this.selectVoice(voices);
+                                    this.voiceReady = true;
+                                    console.log(`✓ Voice system initialized: ${this.voiceName || 'null'} (${this.voiceLang || 'null'})`);
+                                    resolve();
+                                } catch (err) {
+                                    console.error('Voice selection failed:', err);
+                                    reject(err);
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Polling error:', error);
+                            stopPolling();
+                            reject(error);
+                        }
+                    };
+
+                    // Timeout handler
+                    pollTimeout = setTimeout(() => {
+                        stopPolling();
+                        console.error('✗ Voice loading timeout after 3000ms');
+                        reject(new Error('Voice loading timeout - no voices available'));
+                    }, 3000);
+
+                    // Start polling every 250ms
+                    pollInterval = setInterval(pollForVoices, pollIntervalMs);
+
+                    // Immediate first attempt
+                    pollForVoices();
+
+                    // Also listen for voiceschanged event (unreliable on iOS but doesn't hurt)
+                    if (this.synth.onvoiceschanged !== undefined) {
+                        this.synth.onvoiceschanged = () => {
+                            console.log('  voiceschanged event fired (backup trigger)');
+                            pollForVoices();
+                        };
+                    }
                 });
             }
 
             selectVoice(voices) {
-                const storedName = localStorage.getItem('relational-nback-voice-name');
-                const storedLang = localStorage.getItem('relational-nback-voice-lang');
+                console.log('═══════════════════════════════════════════════════════════════');
+                console.log('    ULTRA-COMPREHENSIVE FEMALE-ONLY VOICE SELECTION (ANY LANGUAGE)');
+                console.log('    USER REQUIREMENT: ANY female voice, ZERO male voices');
+                console.log('═══════════════════════════════════════════════════════════════');
+                console.log(`Total voices available: ${voices.length}`);
 
-                if (storedName && storedLang) {
-                    const stored = voices.find(v => v.name === storedName && v.lang === storedLang);
-                    if (stored) {
-                        this.voice = stored;
-                        return;
+                // Log all available voices for debugging
+                voices.forEach((v, idx) => {
+                    console.log(`  [${idx}] ${v.name} (${v.lang}) - ${v.localService ? 'local' : 'remote'}`);
+                });
+
+                // Detect platform
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                const platform = isIOS ? 'iOS' : 'Desktop';
+                console.log(`Platform detected: ${platform}`);
+
+                // ═══════════════════════════════════════════════════════════════
+                // LAYER 1: WESTERN-ONLY LANGUAGE WHITELIST
+                // ═══════════════════════════════════════════════════════════════
+                const westernLanguageCodes = [
+                    'en-US', 'en-GB', 'en-AU', 'en-CA', 'en-NZ', 'en-IE', 'en-ZA',
+                    'en', // Generic English
+                    'fr-FR', 'fr-CA', 'fr-BE', 'fr-CH',
+                    'de-DE', 'de-AT', 'de-CH',
+                    'es-ES', 'es-MX', 'es-AR',
+                    'it-IT', 'it-CH',
+                    'pt-PT', 'pt-BR',
+                    'nl-NL', 'nl-BE',
+                    'sv-SE',
+                    'da-DK',
+                    'no-NO',
+                    'fi-FI',
+                    'pl-PL',
+                    'cs-CZ',
+                    'hu-HU',
+                    'ro-RO',
+                    'el-GR'
+                ];
+
+                // ═══════════════════════════════════════════════════════════════
+                // LAYER 2: NON-WESTERN LANGUAGE/ACCENT EXCLUSION (COMPLETE BLACKLIST)
+                // ═══════════════════════════════════════════════════════════════
+                const nonWesternLanguageCodes = [
+                    // INDIAN LANGUAGES (ALL INDIAN ACCENTS - CRITICAL EXCLUSION)
+                    'hi-IN', 'hi', 'ta-IN', 'ta', 'bn-IN', 'bn', 'te-IN', 'te',
+                    'mr-IN', 'mr', 'gu-IN', 'gu', 'kn-IN', 'kn', 'ml-IN', 'ml',
+                    'pa-IN', 'pa', 'or-IN', 'or', 'as-IN', 'as', 'ur-IN', 'ur',
+
+                    // CHINESE LANGUAGES
+                    'zh-CN', 'zh-TW', 'zh-HK', 'zh', 'cmn', 'yue', 'nan',
+
+                    // JAPANESE
+                    'ja-JP', 'ja',
+
+                    // KOREAN
+                    'ko-KR', 'ko',
+
+                    // ARABIC LANGUAGES
+                    'ar-SA', 'ar-EG', 'ar-AE', 'ar-DZ', 'ar', 'ar-MA', 'ar-TN',
+                    'ar-IQ', 'ar-JO', 'ar-LB', 'ar-KW', 'ar-OM', 'ar-QA',
+
+                    // RUSSIAN/SLAVIC (non-Western European)
+                    'ru-RU', 'ru', 'uk-UA', 'uk', 'be-BY', 'be',
+
+                    // THAI
+                    'th-TH', 'th',
+
+                    // VIETNAMESE
+                    'vi-VN', 'vi',
+
+                    // INDONESIAN/MALAY
+                    'id-ID', 'id', 'ms-MY', 'ms',
+
+                    // TURKISH
+                    'tr-TR', 'tr',
+
+                    // PERSIAN
+                    'fa-IR', 'fa',
+
+                    // HEBREW
+                    'he-IL', 'he', 'iw-IL', 'iw'
+                ];
+
+                // ═══════════════════════════════════════════════════════════════
+                // LAYER 3: EXHAUSTIVE MALE VOICE EXCLUSION LIST (100+ NAMES)
+                // ═══════════════════════════════════════════════════════════════
+                const maleVoiceNames = [
+                    // ═══ COMMON ENGLISH MALE VOICES ═══
+                    'Alex', 'Daniel', 'Fred', 'Tom', 'Thomas', 'Oliver', 'Ralph',
+                    'Bruce', 'James', 'John', 'Nathan', 'Aaron', 'Jorge', 'Diego',
+                    'Timothy', 'Mark', 'David', 'Richard', 'Chris', 'Christopher',
+                    'Matthew', 'Paul', 'George', 'Kevin', 'Jason', 'Michael', 'Robert',
+                    'William', 'Joseph', 'Charles', 'Steven', 'Edward', 'Brian',
+                    'Andrew', 'Anthony', 'Donald', 'Kenneth', 'Joshua', 'Brandon',
+                    'Justin', 'Ryan', 'Eric', 'Nicholas', 'Jacob', 'Jonathan',
+                    'Samuel', 'Benjamin', 'Patrick', 'Alexander', 'Jack', 'Henry',
+                    'Oscar', 'Adam', 'Ethan', 'Noah', 'Liam', 'Mason', 'Logan',
+                    'Lucas', 'Isaac', 'Nathan', 'Caleb', 'Christian', 'Hunter',
+                    'Jordan', 'Dylan', 'Brandon', 'Jose', 'Austin', 'Evan',
+                    'Sean', 'Tyler', 'Kyle', 'Ian', 'Carter', 'Xavier',
+
+                    // ═══ CRITICAL iOS/macOS MALE VOICES (PREVIOUSLY MISSING - MOST LIKELY CULPRITS) ═══
+                    'Reed', 'Reed (Enhanced)', 'Reed (Compact)',
+                    'Rocko', 'Rocko (Enhanced)', 'Rocko (Compact)',
+                    'Lee', 'Lee (Enhanced)', 'Lee (Compact)',
+                    'Gordon', 'Gordon (Enhanced)', 'Gordon (Compact)',
+                    'Martin', 'Martin (Enhanced)', 'Martin (Compact)',
+                    'Xander', 'Xander (Enhanced)', 'Xander (Compact)',
+                    'Yuri', 'Yuri (Enhanced)', 'Yuri (Compact)',
+                    'Otoya', 'Otoya (Enhanced)', 'Otoya (Compact)',
+                    'Maged', 'Maged (Enhanced)', 'Maged (Compact)',
+                    'Majed', 'Majed (Enhanced)', 'Majed (Compact)',
+                    'Tarik', 'Tarik (Enhanced)', 'Tarik (Compact)',
+
+                    // ═══ ADDITIONAL iOS/macOS MALE VOICES ═══
+                    'Carmit', 'Carmit (Enhanced)', 'Carmit (Compact)',
+                    'Lekha', 'Lekha (Enhanced)', 'Lekha (Compact)',
+                    'Lesya', 'Lesya (Enhanced)', 'Lesya (Compact)',
+                    'Luca', 'Luca (Enhanced)', 'Luca (Compact)',
+                    'Maged', 'Majed', 'Tarik',
+                    'Yannick', 'Yannick (Enhanced)', 'Yannick (Compact)',
+                    'Steffi', 'Steffi (Enhanced)', 'Steffi (Compact)',
+                    'Yuri', 'Yuri (Enhanced)', 'Yuri (Compact)',
+                    'Xander', 'Xander (Enhanced)', 'Xander (Compact)',
+
+                    // ═══ SIRI MALE VARIANTS (ALL) ═══
+                    'Siri Male', 'Siri Male (Enhanced)', 'Siri Male (Compact)',
+                    'Siri Male #1', 'Siri Male #2', 'Siri Male #3', 'Siri Male #4',
+
+                    // ═══ INDIAN MALE VOICES (CRITICAL EXCLUSION - RISHI) ═══
+                    'Rishi', 'Prabhat', 'Hemant', 'Swara', 'Kalpana',
+
+                    // ═══ MICROSOFT MALE VOICES ═══
+                    'Microsoft David', 'Microsoft Mark', 'Microsoft Paul',
+                    'Microsoft George', 'Microsoft Rishi', 'Microsoft James',
+                    'Microsoft Sean', 'Microsoft Guy', 'Microsoft Michael',
+                    'Microsoft David Desktop', 'Microsoft Mark Desktop',
+
+                    // ═══ GOOGLE MALE VOICES ═══
+                    'Google UK English Male', 'Google US English Male',
+                    'Google Hindi Male', 'Google Tamil Male', 'Google Bengali Male',
+                    'Google French Male', 'Google German Male', 'Google Spanish Male',
+                    'Google Italian Male', 'Google Portuguese Male',
+                    'Google Arabic Male', 'Google Russian Male', 'Google Japanese Male',
+                    'Google Korean Male', 'Google Chinese Male', 'Google Dutch Male',
+
+                    // ═══ APPLE/iOS MALE VOICES (ALL VARIANTS) ═══
+                    'Alex (Enhanced)', 'Fred (Enhanced)', 'Daniel (Compact)',
+                    'Oliver (Enhanced)', 'Ralph (Compact)', 'Tom (Compact)',
+                    'Alex (Compact)', 'Fred (Compact)', 'Daniel (Enhanced)',
+                    'Oliver (Compact)', 'Ralph (Enhanced)', 'Thomas (Enhanced)',
+                    'Tom (Enhanced)', 'Bruce (Enhanced)', 'Bruce (Compact)',
+                    'James (Enhanced)', 'James (Compact)', 'John (Enhanced)', 'John (Compact)',
+
+                    // ═══ NOVELTY/OTHER PLATFORM MALE VOICES ═══
+                    'Albert', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles',
+                    'Cellos', 'Deranged', 'Good News', 'Hysterical', 'Junior',
+                    'Pipe Organ', 'Trinoids', 'Whisper', 'Wobble', 'Zarvox',
+
+                    // ═══ ADDITIONAL PLATFORM-SPECIFIC MALE VOICES ═══
+                    'Eddy', 'Grandpa', 'Rocky', 'Shelley', 'Superstar',
+                    'Jacques', 'Henri', 'Antoine', 'Pierre', 'Marc',
+                    'Klaus', 'Hans', 'Markus',
+                    'Carlos', 'Juan', 'Luis', 'Miguel', 'Pablo',
+                    'Luca', 'Paolo', 'Marco', 'Giorgio', 'Matteo',
+
+                    // ═══ EUROPEAN/MULTILINGUAL MALE VOICES ═══
+                    'Diego', 'Diego (Enhanced)', 'Diego (Compact)',
+                    'Jorge', 'Jorge (Enhanced)', 'Jorge (Compact)',
+                    'Juan', 'Juan (Enhanced)', 'Juan (Compact)',
+                    'Tomas', 'Tomas (Enhanced)', 'Tomas (Compact)',
+                    'Damien', 'Damien (Enhanced)', 'Damien (Compact)',
+                    'Nicolas', 'Nicolas (Enhanced)', 'Nicolas (Compact)',
+                    'Matthias', 'Matthias (Enhanced)', 'Matthias (Compact)',
+                    'Viktor', 'Viktor (Enhanced)', 'Viktor (Compact)',
+                    'Marko', 'Marko (Enhanced)', 'Marko (Compact)'
+                ];
+
+                // ═══════════════════════════════════════════════════════════════
+                // LAYER 4: EXHAUSTIVE MALE VOICE REGEX PATTERNS
+                // ═══════════════════════════════════════════════════════════════
+                const malePatterns = [
+                    // Common male names
+                    /\balex\b/i, /\bdaniel\b/i, /\bfred\b/i, /\btom\b/i, /\bthomas\b/i,
+                    /\boliver\b/i, /\bralph\b/i, /\bbruce\b/i, /\bjames\b/i, /\bjohn\b/i,
+                    /\bnathan\b/i, /\baaron\b/i, /\bjorge\b/i, /\bdiego\b/i,
+                    /\btimothy\b/i, /\bmark\b/i, /\bdavid\b/i, /\brichard\b/i,
+                    /\bchris\b/i, /\bchristopher\b/i, /\bmatthew\b/i, /\bpaul\b/i,
+                    /\bgeorge\b/i, /\bkevin\b/i, /\bjason\b/i, /\bmichael\b/i,
+                    /\brobert\b/i, /\bwilliam\b/i, /\bjoseph\b/i, /\bcharles\b/i,
+                    /\bsteven\b/i, /\bedward\b/i, /\bbrian\b/i, /\bandrew\b/i,
+                    /\banthony\b/i, /\bdonald\b/i, /\bkenneth\b/i, /\bjoshua\b/i,
+                    /\bjustin\b/i, /\bryan\b/i, /\beric\b/i, /\bjacob\b/i,
+                    /\bpatrick\b/i, /\balexander\b/i, /\bjack\b/i, /\bhenry\b/i,
+                    /\bethan\b/i, /\bnoah\b/i, /\bliam\b/i, /\bmason\b/i,
+                    /\btyler\b/i, /\bkyle\b/i, /\bdylan\b/i, /\badam\b/i,
+                    /\bsean\b/i, /\bcarlos\b/i, /\bjuan\b/i, /\bluis\b/i,
+
+                    // CRITICAL iOS/macOS MALE VOICES (PREVIOUSLY MISSING - MOST LIKELY CULPRITS)
+                    /\breed\b/i, /\brocko\b/i, /\blee\b/i, /\bgordon\b/i,
+                    /\bmartin\b/i, /\bxander\b/i, /\byuri\b/i, /\botoya\b/i,
+                    /\bmaged\b/i, /\bmajed\b/i, /\btarik\b/i,
+
+                    // ADDITIONAL iOS/macOS MALE PATTERNS
+                    /\bcarmit\b/i, /\blekha\b/i, /\blesya\b/i,
+                    /\btomas\b/i, /\bdamien\b/i, /\bnicolas\b/i,
+                    /\bmatthias\b/i, /\bviktor\b/i, /\bmarko\b/i,
+                    /\bluca\b/i, /\bpaolo\b/i, /\bmarco\b/i, /\bgiorgio\b/i, /\bmatteo\b/i,
+                    /\bjacques\b/i, /\bhenri\b/i, /\bantoine\b/i, /\bpierre\b/i, /\bmarc\b/i,
+                    /\bklaus\b/i, /\bhans\b/i, /\bmarkus\b/i, /\byannick\b/i,
+                    /\beddy\b/i, /\bgrandpa\b/i, /\brocky\b/i, /\bshelley\b/i, /\bsuperstar\b/i,
+
+                    // SIRI MALE PATTERNS
+                    /siri.*male/i, /male.*siri/i,
+
+                    // INDIAN MALE VOICES (CRITICAL EXCLUSION - RISHI + ALL INDIAN NAMES)
+                    /\brishi\b/i, /\bprabhat\b/i, /\bhemant\b/i,
+
+                    // Generic male indicators
+                    /\bmale\b/i, /\bman\b/i, /\b\(m\)\b/i, /\bmale voice\b/i,
+                    /\bguy\b/i, /\bdude\b/i, /\bboy\b/i, /\bmr\b/i
+                ];
+
+                // ═══════════════════════════════════════════════════════════════
+                // LAYER 5: INDIAN VOICE EXCLUSION (NAME-BASED)
+                // ═══════════════════════════════════════════════════════════════
+                const indianVoiceNames = [
+                    // ALL INDIAN VOICES (BOTH MALE AND FEMALE)
+                    'Rishi', 'Prabhat', 'Hemant', 'Swara', 'Kalpana',
+                    'Lekha', 'Raveena', 'Veena',
+                    'Aditi', 'Anjali', 'Divya', 'Kavya', 'Priya', 'Shreya'
+                ];
+
+                const indianVoicePatterns = [
+                    /\brishi\b/i, /\bprabhat\b/i, /\bhemant\b/i, /\bswara\b/i, /\bkalpana\b/i,
+                    /\blekha\b/i, /\braveena\b/i, /\bveena\b/i,
+                    /\baditi\b/i, /\banjali\b/i, /\bdivya\b/i, /\bkavya\b/i,
+                    /\bpriya\b/i, /\bshreya\b/i,
+                    /hindi/i, /tamil/i, /bengali/i, /telugu/i, /marathi/i, /gujarati/i,
+                    /indian/i, /india/i
+                ];
+
+                // ═══════════════════════════════════════════════════════════════
+                // LAYER 6: COMPREHENSIVE WESTERN FEMALE VOICE INCLUSION LIST (50+)
+                // ═══════════════════════════════════════════════════════════════
+                const femaleVoiceNames = [
+                    // ═══ COMMON ENGLISH FEMALE VOICES ═══
+                    'Samantha', 'Karen', 'Victoria', 'Susan', 'Zoe', 'Moira',
+                    'Tessa', 'Fiona', 'Nicky', 'Serena', 'Hazel', 'Zira',
+                    'Aria', 'Eva', 'Ava', 'Emma', 'Emily', 'Sarah', 'Kate',
+                    'Anna', 'Lauren', 'Jessica', 'Jennifer', 'Michelle',
+                    'Catherine', 'Elizabeth', 'Amanda', 'Rebecca', 'Nicole',
+                    'Stephanie', 'Melissa', 'Ashley', 'Heather', 'Rachel',
+                    'Amy', 'Laura', 'Angela', 'Kimberly', 'Lisa', 'Mary',
+                    'Sandra', 'Nancy', 'Betty', 'Dorothy', 'Helen', 'Deborah',
+                    'Donna', 'Carol', 'Ruth', 'Sharon', 'Cynthia',
+
+                    // ═══ MICROSOFT WESTERN FEMALE VOICES ═══
+                    'Microsoft Zira', 'Microsoft Hazel', 'Microsoft Susan',
+                    'Microsoft Zira Desktop', 'Microsoft Zira - English (United States)',
+                    'Microsoft Linda', 'Microsoft Heather', 'Microsoft Laura',
+
+                    // ═══ GOOGLE WESTERN FEMALE VOICES ═══
+                    'Google UK English Female', 'Google US English Female',
+                    'Google Australian Female', 'Google French Female',
+                    'Google German Female', 'Google Spanish Female',
+                    'Google Italian Female', 'Google Portuguese Female',
+
+                    // ═══ APPLE/iOS FEMALE VOICES (ALL VARIANTS) ═══
+                    'Samantha (Enhanced)', 'Karen (Enhanced)', 'Moira (Enhanced)',
+                    'Tessa (Enhanced)', 'Victoria (Enhanced)', 'Fiona (Enhanced)',
+                    'Samantha (Compact)', 'Karen (Compact)', 'Moira (Compact)',
+                    'Tessa (Compact)', 'Victoria (Compact)', 'Fiona (Compact)',
+
+                    // iOS format variations: "Name - Language (Country)"
+                    'Samantha - English (United States)', 'Samantha - English (US)',
+                    'Karen - English (Australia)', 'Karen - English (Australian)',
+                    'Moira - English (Ireland)', 'Moira - English (Irish)',
+                    'Tessa - English (South Africa)', 'Tessa - English (South African)',
+                    'Victoria - English (United States)', 'Victoria - English (US)',
+                    'Fiona - English (Scotland)', 'Fiona - English (Scottish)',
+                    'Nicky - English (United States)', 'Serena - English (United Kingdom)',
+
+                    // iOS format variations: "Name (Country Code)"
+                    'Samantha (US)', 'Karen (AU)', 'Moira (IE)', 'Tessa (ZA)',
+                    'Victoria (US)', 'Fiona (GB)', 'Nicky (US)', 'Serena (GB)',
+
+                    // ═══ SIRI VARIANTS ═══
+                    'Siri Female', 'Siri Female (Enhanced)', 'Siri Female (Compact)',
+                    'Siri (Female)', 'Siri - Female', 'Female Siri',
+
+                    // ═══ EUROPEAN FEMALE VOICES ═══
+                    'Amelie', 'Audrey', 'Aurelie', 'Celine', 'Chantal',
+                    'Marie', 'Sophie', 'Yelda', 'Zofia', 'Petra', 'Vicki',
+                    'Katja', 'Sabina', 'Carmit', 'Kyoko', 'Luciana', 'Joana'
+                ];
+
+                // ═══════════════════════════════════════════════════════════════
+                // LAYER 7: WESTERN FEMALE VOICE REGEX PATTERNS (EXPANDED FOR iOS)
+                // ═══════════════════════════════════════════════════════════════
+                const femalePatterns = [
+                    // Core female names (iOS/macOS primary)
+                    /\bsamantha\b/i, /\bkaren\b/i, /\bvictoria\b/i, /\bsusan\b/i,
+                    /\bzoe\b/i, /\bmoira\b/i, /\btessa\b/i, /\bfiona\b/i,
+                    /\bnicky\b/i, /\bserena\b/i, /\bhazel\b/i, /\bzira\b/i,
+
+                    // Additional common female names
+                    /\baria\b/i, /\beva\b/i, /\bava\b/i, /\bemma\b/i,
+                    /\bemily\b/i, /\bsarah\b/i, /\bkate\b/i, /\banna\b/i,
+                    /\blauren\b/i, /\bjessica\b/i, /\bjennifer\b/i, /\bmichelle\b/i,
+                    /\bcatherine\b/i, /\belizabeth\b/i, /\bamanda\b/i,
+                    /\brebecca\b/i, /\bnicole\b/i, /\bstephanie\b/i, /\bmelissa\b/i,
+                    /\bashley\b/i, /\bheather\b/i, /\brachel\b/i, /\bamy\b/i,
+                    /\blaura\b/i, /\bangela\b/i, /\blisa\b/i, /\bmary\b/i,
+
+                    // European female names
+                    /\bamelie\b/i, /\baudrey\b/i, /\bceline\b/i, /\bmarie\b/i,
+                    /\bsophie\b/i, /\bpietra\b/i, /\bvicki\b/i, /\bkatja\b/i,
+                    /\bjoana\b/i, /\bluciana\b/i, /\bcarmit\b/i, /\bkyoko\b/i,
+
+                    // Generic female indicators
+                    /\bfemale\b/i, /\bwoman\b/i, /\b\(f\)\b/i, /\bfemale voice\b/i,
+                    /\bsiri.*female\b/i, /female.*siri/i, /\blady\b/i, /\bgirl\b/i,
+                    /\bms\b/i, /\bmiss\b/i, /\bmrs\b/i
+                ];
+
+                // ═══════════════════════════════════════════════════════════════
+                // SIMPLIFIED FILTERING: EXCLUDE MALES ONLY, ACCEPT ALL OTHERS
+                // ═══════════════════════════════════════════════════════════════
+                // USER REQUIREMENT: "I just want a female voice, it doesn't have to be western"
+                // NEW APPROACH: Inverse logic - reject ONLY male voices, accept everything else
+
+                console.log('\n┌─────────────────────────────────────────────────────────┐');
+                console.log('│  FILTERING: REMOVING MALE VOICES ONLY (ANY LANGUAGE)   │');
+                console.log('└─────────────────────────────────────────────────────────┘');
+
+                const femaleVoices = voices.filter(voice => {
+                    const voiceName = voice.name;
+
+                    // Check by male name (comprehensive list)
+                    const isMaleName = maleVoiceNames.some(maleName =>
+                        voiceName.toLowerCase() === maleName.toLowerCase() ||
+                        voiceName.toLowerCase().includes(maleName.toLowerCase())
+                    );
+
+                    // Check by male pattern (regex)
+                    const isMalePattern = malePatterns.some(pattern =>
+                        pattern.test(voiceName)
+                    );
+
+                    if (isMaleName || isMalePattern) {
+                        console.log(`  ✗✗✗ EXCLUDED (MALE VOICE): ${voiceName} (${voice.lang})`);
+                        return false;
                     }
+
+                    console.log(`  ✓✓✓ ACCEPTED (FEMALE/NON-MALE): ${voiceName} (${voice.lang})`);
+                    return true;
+                });
+
+                console.log(`\nAfter male voice filtering: ${femaleVoices.length} voices remain (${voices.length - femaleVoices.length} male voices EXCLUDED)`);
+
+                // ═══════════════════════════════════════════════════════════════
+                // CRITICAL RULE: If NO non-male voices exist, FAIL HARD
+                // ═══════════════════════════════════════════════════════════════
+                if (femaleVoices.length === 0) {
+                    console.error('\n✗✗✗ CRITICAL FAILURE ✗✗✗');
+                    console.error('NO FEMALE VOICES AVAILABLE!');
+                    console.error('All available voices matched male exclusion patterns.');
+                    this.voiceName = null;
+                    this.voiceLang = null;
+                    this.showVoiceWarning('ERROR: Only male voices available on this system!');
+                    console.log('\n═══════════════════════════════════════════════════════════════');
+                    console.log('   VOICE SELECTION FAILED (No female voices found)');
+                    console.log('═══════════════════════════════════════════════════════════════\n');
+                    return;
                 }
 
-                const preferredLocales = ['en-AU', 'en-GB', 'en-US'];
-                const feminineHints = ['Female', 'Karen', 'Natasha', 'Sonia', 'Serena', 'Aria', 'Samantha'];
+                const finalVoicePool = femaleVoices;
 
-                for (const locale of preferredLocales) {
-                    const candidates = voices.filter(v => v.lang.startsWith(locale));
-                    for (const hint of feminineHints) {
-                        const match = candidates.find(v => v.name.includes(hint));
-                        if (match) {
-                            this.voice = match;
-                            localStorage.setItem('relational-nback-voice-name', match.name);
-                            localStorage.setItem('relational-nback-voice-lang', match.lang);
-                            return;
+                console.log(`FINAL VOICE POOL SIZE: ${finalVoicePool.length} female voices (any language)`);
+                console.log(`  (${voices.length} original → ${finalVoicePool.length} after male exclusion)\n`);
+
+                // ═══════════════════════════════════════════════════════════════
+                // TIER 1: PLATFORM-SPECIFIC PRIORITY LISTS (PREFERRED VOICES)
+                // ═══════════════════════════════════════════════════════════════
+                const iOSFemalePriority = [
+                    'Samantha',
+                    'Samantha (Enhanced)',
+                    'Karen',
+                    'Karen (Enhanced)',
+                    'Moira',
+                    'Moira (Enhanced)',
+                    'Tessa',
+                    'Tessa (Enhanced)',
+                    'Victoria',
+                    'Victoria (Enhanced)',
+                    'Fiona',
+                    'Fiona (Enhanced)',
+                    'Nicky',
+                    'Serena',
+                    'Siri Female',
+                    'Siri Female (Enhanced)',
+                    'Siri Female (Compact)'
+                ];
+
+                const desktopFemalePriority = [
+                    'Samantha',
+                    'Victoria',
+                    'Karen',
+                    'Susan',
+                    'Zoe',
+                    'Hazel',
+                    'Zira',
+                    'Microsoft Zira',
+                    'Microsoft Zira Desktop',
+                    'Microsoft Hazel',
+                    'Microsoft Susan',
+                    'Google US English Female',
+                    'Google UK English Female',
+                    'Google Australian Female'
+                ];
+
+                const priorityList = isIOS ? iOSFemalePriority : desktopFemalePriority;
+
+                console.log('┌─────────────────────────────────────────────────────────┐');
+                console.log('│  TIER 1: PRIORITY LIST MATCHING                       │');
+                console.log('└─────────────────────────────────────────────────────────┘');
+
+                for (const priorityName of priorityList) {
+                    console.log(`  Trying priority voice: ${priorityName}`);
+                    const match = finalVoicePool.find(v => v.name === priorityName);
+                    if (match) {
+                        console.log(`  ✓✓✓ PRIORITY VOICE FOUND: ${match.name} (${match.lang})`);
+
+                        // ═══════════════════════════════════════════════════════════════
+                        // FINAL SAFETY NET: Verify this is NOT a male voice (should never happen)
+                        // ═══════════════════════════════════════════════════════════════
+                        const voiceName = match.name;
+                        const isMaleName = maleVoiceNames.some(maleName =>
+                            voiceName.toLowerCase().includes(maleName.toLowerCase())
+                        );
+                        const isMalePattern = malePatterns.some(pattern => pattern.test(voiceName));
+
+                        if (isMaleName || isMalePattern) {
+                            console.error(`  ✗✗✗ SAFETY BLOCK: Priority voice "${voiceName}" matched MALE pattern! Skipping.`);
+                            continue;
                         }
-                    }
-                    if (candidates.length) {
-                        this.voice = candidates[0];
+
+                        // ═══════════════════════════════════════════════════════════════
+                        // iOS CRITICAL: Store name and lang as STRINGS, not object
+                        // ═══════════════════════════════════════════════════════════════
+                        this.voiceName = match.name;
+                        this.voiceLang = match.lang;
+                        this.persistVoice(match, this.isIOS);
+                        console.log('\n═══════════════════════════════════════════════════════════════');
+                        console.log(`   VOICE SELECTION COMPLETE: ${this.voiceName} (${this.voiceLang})`);
+                        console.log('   (Stored as name+lang strings for iOS compatibility)');
+                        console.log('═══════════════════════════════════════════════════════════════\n');
                         return;
                     }
                 }
+                console.log('  No priority matches found');
 
-                this.voice = voices[0] || null;
+                // ═══════════════════════════════════════════════════════════════
+                // TIER 2: USE FIRST VOICE FROM FILTERED POOL
+                // ═══════════════════════════════════════════════════════════════
+                console.log('\n┌─────────────────────────────────────────────────────────┐');
+                console.log('│  TIER 2: SELECTING FIRST FEMALE VOICE FROM POOL        │');
+                console.log('└─────────────────────────────────────────────────────────┘');
+
+                if (finalVoicePool.length > 0) {
+                    const candidateVoice = finalVoicePool[0];
+                    const voiceName = candidateVoice.name;
+
+                    console.log(`  Candidate voice: ${voiceName} (${candidateVoice.lang})`);
+
+                    // ═══════════════════════════════════════════════════════════════
+                    // FINAL SAFETY NET: Verify this is NOT a male voice (should never happen)
+                    // ═══════════════════════════════════════════════════════════════
+                    const isMaleName = maleVoiceNames.some(maleName =>
+                        voiceName.toLowerCase().includes(maleName.toLowerCase())
+                    );
+                    const isMalePattern = malePatterns.some(pattern => pattern.test(voiceName));
+
+                    if (isMaleName || isMalePattern) {
+                        console.error(`  ✗✗✗ SAFETY BLOCK: Candidate voice "${voiceName}" matched MALE pattern!`);
+                        console.error('  This should never happen - male voice in female pool!');
+                        this.voiceName = null;
+                        this.voiceLang = null;
+                        this.showVoiceWarning('ERROR: Male voice detected in female pool! Refusing assignment for safety.');
+                        return;
+                    }
+
+                    // ═══════════════════════════════════════════════════════════════
+                    // iOS CRITICAL: Store name and lang as STRINGS, not object
+                    // Voice passed male exclusion filter, so it's female - ACCEPT IT
+                    // ═══════════════════════════════════════════════════════════════
+                    this.voiceName = candidateVoice.name;
+                    this.voiceLang = candidateVoice.lang;
+                    console.log(`  ✓✓✓ SELECTED: ${this.voiceName} (${this.voiceLang})`);
+                    this.persistVoice(candidateVoice, this.isIOS);
+                    console.log('\n═══════════════════════════════════════════════════════════════');
+                    console.log(`   VOICE SELECTION COMPLETE: ${this.voiceName} (${this.voiceLang})`);
+                    console.log('   (Stored as name+lang strings for iOS compatibility)');
+                    console.log('═══════════════════════════════════════════════════════════════\n');
+                    return;
+                }
+
+                // ═══════════════════════════════════════════════════════════════
+                // CRITICAL FAILURE - No suitable voices exist
+                // ═══════════════════════════════════════════════════════════════
+                console.error('\n✗✗✗ CRITICAL FAILURE ✗✗✗');
+                console.error('No female voices available on this device!');
+                console.error('All available voices matched male exclusion patterns.');
+                console.error('This should not happen on iPhone - investigating available voices:');
+                voices.forEach((v, idx) => {
+                    console.error(`  [${idx}] ${v.name} (${v.lang})`);
+                });
+                this.voiceName = null;
+                this.voiceLang = null;
+                this.showVoiceWarning('ERROR: No female voice available on this device!');
+                console.log('\n═══════════════════════════════════════════════════════════════');
+                console.log('   VOICE SELECTION FAILED');
+                console.log('═══════════════════════════════════════════════════════════════\n');
+            }
+
+            // Helper method to persist voice selection with platform awareness
+            persistVoice(voice, isIOS) {
+                localStorage.setItem('relational-nback-voice-name', voice.name);
+                localStorage.setItem('relational-nback-voice-lang', voice.lang);
+                localStorage.setItem('relational-nback-voice-platform', isIOS ? 'ios' : 'desktop');
+                console.log('Persisted voice:', voice.name, voice.lang, isIOS ? 'ios' : 'desktop');
+            }
+
+            // Method to reset voice selection (for manual override)
+            resetVoiceSelection() {
+                localStorage.removeItem('relational-nback-voice-name');
+                localStorage.removeItem('relational-nback-voice-lang');
+                localStorage.removeItem('relational-nback-voice-platform');
+                this.voiceName = null;
+                this.voiceLang = null;
+                console.log('Voice selection reset');
+            }
+
+            // Display warning to user about voice selection issues
+            showVoiceWarning(message) {
+                console.warn(`VOICE WARNING: ${message}`);
+
+                // Update voice-info element if it exists
+                const voiceInfoEl = document.getElementById('voice-info');
+                if (voiceInfoEl) {
+                    voiceInfoEl.innerHTML = `<span style="color: #e74c3c;">⚠ ${message}</span>`;
+                }
+
+                // Optionally show alert for critical issues
+                if (message.includes('ERROR')) {
+                    setTimeout(() => {
+                        alert(`Voice System Warning:\n\n${message}\n\nThe game may not work correctly without a suitable voice.`);
+                    }, 500);
+                }
             }
 
             getVoiceInfo() {
-                return this.voice ? `${this.voice.name} (${this.voice.lang})` : 'Voice not initialized';
+                return this.voiceName ? `${this.voiceName} (${this.voiceLang})` : 'Voice not initialized';
             }
 
+            // ═══════════════════════════════════════════════════════════════
+            // iOS CRITICAL: Get FRESH voice object from getVoices()
+            // NEVER return cached voice object - causes staleness on iOS
+            // This method is called by speak() before EVERY utterance
+            // ═══════════════════════════════════════════════════════════════
+            getFreshVoiceObject() {
+                if (!this.voiceName || !this.voiceLang) {
+                    console.error('getFreshVoiceObject: No voice selected (voiceName/voiceLang null)');
+                    return null;
+                }
+
+                try {
+                    const voices = this.synth.getVoices();
+
+                    if (!voices || voices.length === 0) {
+                        console.error('getFreshVoiceObject: getVoices() returned empty array');
+                        return null;
+                    }
+
+                    // Find voice by name AND lang (exact match)
+                    const freshVoice = voices.find(v =>
+                        v.name === this.voiceName &&
+                        v.lang === this.voiceLang
+                    );
+
+                    if (freshVoice) {
+                        console.log(`✓ Fresh voice object retrieved: ${freshVoice.name} (${freshVoice.lang})`);
+                        return freshVoice;
+                    }
+
+                    // FALLBACK: Selected voice not found - try to find ANY female voice
+                    console.warn(`Selected voice "${this.voiceName}" (${this.voiceLang}) not found in current getVoices()`);
+                    console.warn('Attempting fallback to ANY available female voice...');
+
+                    // Use the same male exclusion logic as selectVoice()
+                    const maleVoiceNames = ['Reed', 'Alex', 'Daniel', 'Fred', 'Tom', 'Thomas', 'Oliver', 'Ralph', 'Bruce', 'James', 'Rishi', 'Rocko', 'Lee', 'Gordon', 'Martin', 'Xander', 'Yuri'];
+                    const malePatterns = [/\breed\b/i, /\balex\b/i, /\bmale\b/i, /\brishi\b/i, /\bman\b/i];
+
+                    const anyFemaleVoice = voices.find(v => {
+                        const isMaleName = maleVoiceNames.some(maleName =>
+                            v.name.toLowerCase().includes(maleName.toLowerCase())
+                        );
+                        const isMalePattern = malePatterns.some(pattern => pattern.test(v.name));
+                        return !isMaleName && !isMalePattern;
+                    });
+
+                    if (anyFemaleVoice) {
+                        console.warn(`⚠ Using fallback female voice: ${anyFemaleVoice.name} (${anyFemaleVoice.lang})`);
+                        return anyFemaleVoice;
+                    }
+
+                    console.error('getFreshVoiceObject: No female voice found (all voices are male)');
+                    return null;
+
+                } catch (err) {
+                    console.error('getFreshVoiceObject error:', err);
+                    return null;
+                }
+            }
+
+            // Backward compatibility alias (calls getFreshVoiceObject)
             getLockedVoice() {
-                return this.voice;
+                return this.getFreshVoiceObject();
             }
 
             async cancelAndWait() {
@@ -3779,10 +5239,112 @@
 
                     const utterance = new SpeechSynthesisUtterance(text);
                     const voice = this.getLockedVoice();
+
+                    // ═══════════════════════════════════════════════════════════════
+                    // CRITICAL SAFETY RULE #1: REFUSE TO SPEAK IF NO VOICE ASSIGNED
+                    // This prevents browser from using its DEFAULT voice (male on iPhone)
+                    // ═══════════════════════════════════════════════════════════════
+                    if (!voice) {
+                        console.error('✗✗✗ CRITICAL SAFETY BLOCK: No voice assigned (this.voice is null)!');
+                        console.error('REFUSING TO SPEAK to prevent browser default voice (likely male) from being used!');
+                        console.error('Voice system failed to initialize properly or all voices were filtered out.');
+                        console.error('Check browser console for voice selection errors.');
+                        resolve({ fallback: true, attempts: 0 });
+                        return;
+                    }
+
+                    // ═══════════════════════════════════════════════════════════════
+                    // COMPREHENSIVE SAFETY CHECK: Prevent ANY male voices from speaking
+                    // This is the SECOND line of defense - if a male voice reaches here,
+                    // we refuse to speak rather than use it
+                    // ═══════════════════════════════════════════════════════════════
                     if (voice) {
+                        const voiceName = voice.name;
+
+                        // EXHAUSTIVE male voice detection patterns (CRITICAL - includes Reed, Rocko, Lee, Gordon, etc.)
+                        const malePatterns = [
+                            // Common male names
+                            /\balex\b/i, /\bdaniel\b/i, /\bfred\b/i, /\btom\b/i, /\bthomas\b/i,
+                            /\boliver\b/i, /\bralph\b/i, /\bbruce\b/i, /\bjames\b/i, /\bjohn\b/i,
+                            /\bnathan\b/i, /\baaron\b/i, /\bjorge\b/i, /\bdiego\b/i,
+                            /\bmark\b/i, /\bdavid\b/i, /\brichard\b/i, /\bpaul\b/i, /\bgeorge\b/i,
+                            /\bmichael\b/i, /\brobert\b/i, /\bwilliam\b/i, /\bjoseph\b/i,
+
+                            // CRITICAL iOS/macOS male voices (PREVIOUSLY MISSING)
+                            /\breed\b/i, /\brocko\b/i, /\blee\b/i, /\bgordon\b/i,
+                            /\bmartin\b/i, /\bxander\b/i, /\byuri\b/i, /\botoya\b/i,
+                            /\bmaged\b/i, /\bmajed\b/i, /\btarik\b/i,
+
+                            // Additional male voices
+                            /\bluca\b/i, /\bpaolo\b/i, /\bmarco\b/i, /\btomas\b/i,
+                            /\bnicolas\b/i, /\bviktor\b/i, /\bmarko\b/i,
+
+                            // INDIAN MALE VOICES
+                            /\brishi\b/i, /\bprabhat\b/i, /\bhemant\b/i,
+
+                            // Siri male
+                            /siri.*male/i, /male.*siri/i,
+
+                            // Generic male indicators
+                            /\bmale\b/i, /\bman\b/i, /\b\(m\)\b/i, /\bmale voice\b/i,
+                            /\bguy\b/i, /\bdude\b/i, /\bboy\b/i, /\bmr\b/i
+                        ];
+
+                        const isMaleVoice = malePatterns.some(pattern => pattern.test(voiceName));
+
+                        if (isMaleVoice) {
+                            console.error(`✗✗✗ RUNTIME SAFETY BLOCK: Prevented male voice "${voiceName}" from speaking!`);
+                            console.error('CRITICAL: Male voice bypassed selectVoice filtering - this should NEVER happen!');
+                            console.error('Refusing to speak. Voice system is compromised.');
+                            resolve({ fallback: true, attempts: 0 });
+                            return;
+                        }
+
+                        // ADDITIONAL SAFETY: Confirm voice matches female patterns (EXPANDED FOR iOS)
+                        const femalePatterns = [
+                            // Core iOS/macOS female voices
+                            /\bsamantha\b/i, /\bkaren\b/i, /\bvictoria\b/i, /\bsusan\b/i,
+                            /\bzoe\b/i, /\bmoira\b/i, /\btessa\b/i, /\bfiona\b/i,
+                            /\bnicky\b/i, /\bserena\b/i, /\bhazel\b/i, /\bzira\b/i,
+
+                            // Additional common female names
+                            /\baria\b/i, /\beva\b/i, /\bava\b/i, /\bemma\b/i,
+                            /\bemily\b/i, /\bsarah\b/i, /\bkate\b/i, /\banna\b/i,
+                            /\blauren\b/i, /\bjessica\b/i, /\bjennifer\b/i, /\bmichelle\b/i,
+                            /\bcatherine\b/i, /\belizabeth\b/i, /\bamanda\b/i,
+                            /\brebecca\b/i, /\bnicole\b/i, /\bstephanie\b/i, /\bmelissa\b/i,
+
+                            // European female names
+                            /\bamelie\b/i, /\baudrey\b/i, /\bceline\b/i, /\bmarie\b/i,
+                            /\bsophie\b/i, /\bvicki\b/i, /\bkatja\b/i, /\bjoana\b/i,
+                            /\bluciana\b/i,
+
+                            // Generic female indicators
+                            /\bfemale\b/i, /\bwoman\b/i, /\bsiri.*female\b/i, /female.*siri/i,
+                            /\blady\b/i, /\bgirl\b/i, /\b\(f\)\b/i
+                        ];
+
+                        const isFemaleVoice = femalePatterns.some(pattern => pattern.test(voiceName));
+
+                        if (!isFemaleVoice) {
+                            console.warn(`⚠ WARNING: Voice "${voiceName}" does not match known female patterns`);
+                            console.warn('Allowing it to proceed, but this voice may not be female');
+                            console.warn('If you hear a male voice, please report this immediately');
+                        }
+
+                        // ═══════════════════════════════════════════════════════════════
+                        // iOS CRITICAL: Set BOTH utterance.voice AND utterance.lang
+                        // Setting only ONE property causes iOS to ignore and use default
+                        // BOTH must be set together or iOS falls back to Reed (male)
+                        // ═══════════════════════════════════════════════════════════════
                         utterance.voice = voice;
                         utterance.lang = voice.lang;
+
+                        if (this.isIOS) {
+                            console.log(`iOS: Set both utterance.voice="${voice.name}" AND utterance.lang="${voice.lang}"`);
+                        }
                     }
+
                     utterance.pitch = this.pitch;
                     utterance.rate = this.rate;
                     utterance.volume = this.volume;
@@ -3806,6 +5368,57 @@
                             finish(true);
                             return;
                         }
+                        // ═══════════════════════════════════════════════════════════════
+                        // CRITICAL SAFETY RULE #2: VERIFY utterance.voice IS SET
+                        // Final check before speaking - if utterance.voice is not set,
+                        // browser will use DEFAULT voice (Reed on iPhone)
+                        // ═══════════════════════════════════════════════════════════════
+                        if (!utterance.voice) {
+                            console.error('✗✗✗ CRITICAL SAFETY BLOCK: utterance.voice is not set!');
+                            console.error('REFUSING TO SPEAK - would use browser default voice (male)!');
+                            console.error('This should NEVER happen - voice was not properly assigned to utterance.');
+                            finish(true);
+                            return;
+                        }
+
+                        // ═══════════════════════════════════════════════════════════════
+                        // iOS CRITICAL: VERIFY BOTH utterance.voice AND utterance.lang ARE SET
+                        // iOS requires BOTH properties or ignores voice and uses default Reed
+                        // ═══════════════════════════════════════════════════════════════
+                        if (this.isIOS) {
+                            if (!utterance.voice || !utterance.lang) {
+                                console.error('✗✗✗ iOS CRITICAL SAFETY BLOCK: utterance.voice OR utterance.lang not set!');
+                                console.error(`utterance.voice: ${utterance.voice?.name || 'NULL'}`);
+                                console.error(`utterance.lang: ${utterance.lang || 'NULL'}`);
+                                console.error('iOS requires BOTH properties set or will use default voice (Reed - male)!');
+                                console.error('REFUSING TO SPEAK!');
+                                finish(true);
+                                return;
+                            }
+                            console.log(`✓ iOS dual-property check passed: voice="${utterance.voice.name}", lang="${utterance.lang}"`);
+                        }
+
+                        // ═══════════════════════════════════════════════════════════════
+                        // FINAL VERIFICATION: Confirm assigned voice is female
+                        // ═══════════════════════════════════════════════════════════════
+                        const assignedVoiceName = utterance.voice.name;
+                        console.log(`📢 About to speak with voice: "${assignedVoiceName}" (${utterance.voice.lang})`);
+
+                        // One last male voice check (includes Reed - iOS default)
+                        const finalMaleCheck = [
+                            /\breed\b/i, /\brocko\b/i, /\balex\b/i, /\bfred\b/i, /\btom\b/i,
+                            /\bmale\b/i, /\bman\b/i, /\brishi\b/i, /\blee\b/i, /\bgordon\b/i,
+                            /\bmartin\b/i, /\bxander\b/i, /\byuri\b/i, /\botoya\b/i,
+                            /\bmaged\b/i, /\bmajed\b/i, /\btarik\b/i, /\bdaniel\b/i
+                        ];
+
+                        if (finalMaleCheck.some(pattern => pattern.test(assignedVoiceName))) {
+                            console.error(`✗✗✗ FINAL SAFETY BLOCK: Assigned voice "${assignedVoiceName}" is MALE!`);
+                            console.error('REFUSING TO SPEAK!');
+                            finish(true);
+                            return;
+                        }
+
                         try {
                             this.synth.resume();
                         } catch (err) {
@@ -3829,6 +5442,7 @@
                 return this.speak(text, guardToken);
             }
         }
+
         class GameEngine {
             constructor() {
                 this.session = sessionDefaults();
@@ -3860,6 +5474,8 @@
                 this.policy = AdvancePolicy.ACTIVE;
                 this.lastSpokenFallback = false;
                 this.activePremise = null;
+                this.forceMetaLeap = false;
+                this.forceCompoundLeap = false;
             }
 
             get n() {
@@ -3916,6 +5532,13 @@
 
             async initialize() {
                 await this.voice.initialize();
+
+                // ═══════════════════════════════════════════════════════════════
+                // iOS CRITICAL: Unlock speech synthesis from user gesture
+                // Must be called after voice.initialize() to enable iOS speech
+                // ═══════════════════════════════════════════════════════════════
+                this.voice.unlockIOSSpeech();
+
                 this.updateVoiceInfo();
                 this.attachUI();
                 this.updateUI();
@@ -3945,8 +5568,63 @@
 
                 const transitivityToggle = document.getElementById('transitivity-toggle');
                 if (transitivityToggle) {
+                    this.equivalence.setTransitivity(transitivityToggle.checked); // Apply initial state
                     transitivityToggle.addEventListener('change', (e) => {
                         this.equivalence.setTransitivity(e.target.checked);
+                    });
+                }
+
+                const gLeapToggle = document.getElementById('g-leap-toggle');
+                if (gLeapToggle) {
+                    gLeapToggle.addEventListener('change', (e) => {
+                        this.forceMetaLeap = e.target.checked;
+
+                        // If Level 6 enabled, disable Level 7
+                        if (this.forceMetaLeap) {
+                            const compoundToggle = document.getElementById('compound-leap-toggle');
+                            if (compoundToggle) compoundToggle.checked = false;
+                            this.forceCompoundLeap = false;
+                        }
+
+                        // Disable transitivity toggle in META mode (doesn't apply to operator logic)
+                        const transitivityCtrl = document.getElementById('transitivity-toggle');
+                        if (transitivityCtrl) {
+                            transitivityCtrl.disabled = this.forceMetaLeap || this.forceCompoundLeap;
+                        }
+
+                        // Update k slider label to show what k means in META mode
+                        const kLabel = document.getElementById('k-label');
+                        if (kLabel) {
+                            kLabel.textContent = this.forceMetaLeap ? 'Operator Pairs' :
+                                               this.forceCompoundLeap ? 'Compound Atoms' : 'Atoms per Premise';
+                        }
+                    });
+                }
+
+                const compoundLeapToggle = document.getElementById('compound-leap-toggle');
+                if (compoundLeapToggle) {
+                    compoundLeapToggle.addEventListener('change', (e) => {
+                        this.forceCompoundLeap = e.target.checked;
+
+                        // If Level 7 enabled, disable Level 6
+                        if (this.forceCompoundLeap) {
+                            const gToggle = document.getElementById('g-leap-toggle');
+                            if (gToggle) gToggle.checked = false;
+                            this.forceMetaLeap = false;
+                        }
+
+                        // Disable transitivity toggle in COMPOUND mode (doesn't apply)
+                        const transitivityCtrl = document.getElementById('transitivity-toggle');
+                        if (transitivityCtrl) {
+                            transitivityCtrl.disabled = this.forceMetaLeap || this.forceCompoundLeap;
+                        }
+
+                        // Update k slider label
+                        const kLabel = document.getElementById('k-label');
+                        if (kLabel) {
+                            kLabel.textContent = this.forceCompoundLeap ? 'Compound Atoms' :
+                                               this.forceMetaLeap ? 'Operator Pairs' : 'Atoms per Premise';
+                        }
                     });
                 }
 
@@ -4045,6 +5723,25 @@
                     });
                 }
 
+                const resetVoiceBtn = document.getElementById('reset-voice-btn');
+                if (resetVoiceBtn) {
+                    resetVoiceBtn.addEventListener('click', async () => {
+                        console.log('Manual voice reset requested');
+                        // Reset voice selection and re-initialize
+                        this.voice.resetVoiceSelection();
+                        this.voice.voiceReady = false;
+
+                        try {
+                            await this.voice.initialize();
+                            this.updateVoiceInfo();
+                            alert('Voice selection has been reset and re-initialized.\n\nSelected voice: ' + this.voice.getVoiceInfo());
+                        } catch (error) {
+                            console.error('Voice re-initialization failed:', error);
+                            alert('Voice re-initialization failed: ' + error.message);
+                        }
+                    });
+                }
+
                 document.addEventListener('keydown', (e) => {
                     if (e.code === 'Space' || e.code === 'Enter') {
                         const handler = window.__imagiActiveResponse;
@@ -4085,7 +5782,35 @@
             updateVoiceInfo() {
                 const info = document.getElementById('voice-info');
                 if (info) {
-                    info.innerHTML = `<strong>Voice:</strong> ${this.voice.getVoiceInfo()}`;
+                    const voiceInfo = this.voice.getVoiceInfo();
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                    const platform = isIOS ? 'iOS' : 'Desktop';
+
+                    // Determine voice status with female voice awareness
+                    let voiceStatus;
+                    if (this.voice.voice) {
+                        const voiceName = this.voice.voice.name;
+
+                        // Check if it's a known female voice
+                        const knownFemaleVoices = [
+                            'Samantha', 'Karen', 'Moira', 'Tessa', 'Victoria', 'Fiona',
+                            'Nicky', 'Serena', 'Susan', 'Zoe', 'Hazel', 'Zira'
+                        ];
+                        const isKnownFemale = knownFemaleVoices.some(name => voiceName.includes(name));
+
+                        if (voiceName.includes('Samantha')) {
+                            voiceStatus = '<span style="color: #2ecc71;">✓ Samantha (Female)</span>';
+                        } else if (isKnownFemale) {
+                            voiceStatus = '<span style="color: #2ecc71;">✓ Female Voice</span>';
+                        } else {
+                            voiceStatus = '<span style="color: #f39c12;">⚠ Ambiguous Voice</span>';
+                        }
+                    } else {
+                        voiceStatus = '<span style="color: #e74c3c;">✗ No Voice</span>';
+                    }
+
+                    info.innerHTML = `<strong>Voice:</strong> ${voiceInfo} | <strong>Platform:</strong> ${platform} | ${voiceStatus}`;
+                    console.log(`Voice info updated: ${voiceInfo} on ${platform}`);
                 }
             }
 
@@ -4219,7 +5944,9 @@
                     middleAtoms: plan.middleAtoms,
                     avoidLetters: (override !== null ? override : plan.planMatch) ? plan.cooldown : null,
                     allowOverride: true,
-                    foilPlan: plan.foilPlan
+                    foilPlan: plan.foilPlan,
+                    forceMetaLeap: this.forceMetaLeap,
+                    forceCompoundLeap: this.forceCompoundLeap
                 };
                 return this.generator.generate(params);
             }
@@ -4276,6 +6003,7 @@
                     planMatch: false
                 };
             }
+
 
             async executeTrial(sess, trialToken, signal) {
                 if (!valid(sess, trialToken)) return;
@@ -4343,7 +6071,6 @@
                         feedbackEl.textContent = 'Listening…';
                         feedbackEl.className = 'feedback';
                     }
-                    this.session.trialIndex = currentIndex + 1;
                     this.updateUI();
                     this.activePremise = null;
                     return;
@@ -4431,7 +6158,6 @@
                 });
 
                 this.activePremise = null;
-                this.session.trialIndex = currentIndex + 1;
                 this.updateUI();
             }
 
@@ -4591,7 +6317,9 @@
 
         function formatPremiseForSpeech(premise) {
             if (!premise) return '';
-            return premise.atoms.map(atom => `${atom.head} is ${RELATION_WORDS[atom.axis]} ${atom.tail}`).join('; ') + '.';
+
+            // Use premise's toNaturalSpeech() method which handles all types
+            return premise.toNaturalSpeech();
         }
 
         function estimateUtteranceMs(text, rate = 0.9) {
@@ -4622,15 +6350,40 @@
                 } catch (err) {
                     console.warn('speechSynthesis.cancel before speak failed', err);
                 }
+                try {
+                    window.speechSynthesis?.resume();
+                } catch (err) {
+                    console.warn('speechSynthesis.resume after cancel failed', err);
+                }
 
                 const text = formatPremiseForSpeech(premise);
                 window.currentPremiseText = text;
                 const utterance = new SpeechSynthesisUtterance(text);
-                const lockedVoice = engine?.voice?.getLockedVoice?.();
-                if (lockedVoice) {
-                    utterance.voice = lockedVoice;
-                    utterance.lang = lockedVoice.lang;
+
+                // ═══════════════════════════════════════════════════════════════
+                // iOS CRITICAL FIX: Use VoiceSynthesis class's selected voice
+                // ═══════════════════════════════════════════════════════════════
+                // PROBLEM: Previous code used voices[0] which on iPhone = Reed (male)
+                // SOLUTION: Use engine.voice.getFreshVoiceObject() for properly selected female voice
+                // This matches the Voice Preview button behavior which works perfectly on iPhone
+
+                const freshVoice = engine?.voice?.getFreshVoiceObject();
+                if (freshVoice) {
+                    utterance.voice = freshVoice;
+                    utterance.lang = freshVoice.lang;
+                    console.log(`✓ speakPremiseSafe using selected voice: ${freshVoice.name} (${freshVoice.lang})`);
+                } else {
+                    console.error('✗ speakPremiseSafe: getFreshVoiceObject() returned null - attempting fallback');
+                    // Fallback: Try to get voices array directly (should not happen if voice initialized)
+                    const voices = window.speechSynthesis.getVoices();
+                    if (voices.length > 0) {
+                        // Last resort: use voices[0] (will be male on iPhone, but better than silence)
+                        utterance.voice = voices[0];
+                        utterance.lang = voices[0].lang;
+                        console.warn(`⚠ Using fallback voice: ${voices[0].name} (may be male on iPhone)`);
+                    }
                 }
+
                 const pitch = engine?.voice?.pitch ?? 1.2;
                 const rate = engine?.voice?.rate ?? 0.9;
                 const volume = engine?.voice?.volume ?? 1.0;
@@ -4707,7 +6460,16 @@
 
         async function dwellSafe(seconds, trialToken, signal) {
             return new Promise((resolve) => {
-                Timer.set('dwell', Math.max(0, Math.round(seconds * 1000)), trialToken, signal, resolve);
+                let resolved = false;
+                const safeResolve = () => {
+                    if (!resolved) {
+                        resolved = true;
+                        resolve();
+                    }
+                };
+                Timer.set('dwell', Math.max(0, Math.round(seconds * 1000)), trialToken, signal, safeResolve);
+                // Ensure promise resolves if signal aborts
+                signal.addEventListener('abort', safeResolve, { once: true });
             });
         }
 
@@ -4817,6 +6579,7 @@
                 console.warn('speechSynthesis.resume visibility failed', err);
             }
         });
+
         class InstructionsManager {
             constructor(engine) {
                 this.engine = engine;
@@ -5167,10 +6930,7 @@
                 this.content.appendChild(panel);
 
                 this.sandboxElements = {
-                    status,
-                    atoms,
-                    grid,
-                    journal
+                    status, atoms, grid, journal
                 };
 
                 this.renderSandboxPremise();
@@ -5473,11 +7233,20 @@
         const instructions = new InstructionsManager(engine);
         instructions.initialize();
         engine.initialize().then(() => {
+            console.log('Game engine initialization complete');
             instructions.updateCompletionState();
             if (instructions.dialogOpen && instructions.readAloud) {
                 instructions.queueSpeech(true);
             }
+        }).catch((error) => {
+            console.error('Game engine initialization failed:', error);
+            const statusEl = document.getElementById('status');
+            if (statusEl) {
+                statusEl.textContent = 'Voice initialization failed. Check console for details.';
+            }
+            alert('Voice system failed to initialize. Please check your browser settings and reload the page.\n\nError: ' + error.message);
         });
     </script>
 </body>
 </html>
+
